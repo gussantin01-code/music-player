@@ -12,7 +12,6 @@
       --text:#f2f2f2;
       --muted:#9a9a9a;
       --line:#2a2a2c;
-      --accent:#7b61ff;      /* фиолетовый (кружки-нажатия у тебя в макете) */
       --btn:#1e1e20;
     }
     *{box-sizing:border-box}
@@ -24,8 +23,6 @@
       height:100vh;
       overflow:hidden;
     }
-
-    /* header */
     .header{
       height:56px;
       display:flex;
@@ -37,15 +34,13 @@
       border-bottom:1px solid var(--line);
       position:relative;
       user-select:none;
+      cursor:pointer;
     }
-    .header:active{opacity:.92}
     .wrap{
       height:calc(100vh - 56px);
       overflow:auto;
       padding:14px 14px 90px;
     }
-
-    /* playlist row */
     .pl{
       background:var(--card);
       border:1px solid var(--line);
@@ -56,10 +51,9 @@
       gap:12px;
       margin-bottom:10px;
       position:relative;
-      transition:transform .08s;
       user-select:none;
+      cursor:pointer;
     }
-    .pl:active{transform:scale(.995)}
     .pl-cover{
       width:54px;
       height:54px;
@@ -74,7 +68,7 @@
       font-size:22px;
     }
     .pl-cover img{width:100%;height:100%;object-fit:cover}
-    .pl-info{min-width:0; flex:1}
+    .pl-info{min-width:0;flex:1}
     .pl-name{
       font-weight:650;
       font-size:16px;
@@ -87,8 +81,6 @@
       color:var(--muted);
       font-size:12px;
     }
-
-    /* edit/delete floating buttons (right side) */
     .side-actions{
       position:fixed;
       right:14px;
@@ -111,10 +103,8 @@
       color:var(--text);
       font-size:18px;
       user-select:none;
+      cursor:pointer;
     }
-    .fab:active{opacity:.9}
-
-    /* bottom sheet */
     .sheet-backdrop{
       position:fixed;
       inset:0;
@@ -124,7 +114,7 @@
       transition:opacity .18s;
       z-index:20;
     }
-    .sheet-backdrop.show{opacity:1; pointer-events:auto}
+    .sheet-backdrop.show{opacity:1;pointer-events:auto}
     .sheet{
       position:fixed;
       left:0;
@@ -142,8 +132,10 @@
     }
     .sheet.show{bottom:0}
     .sheet-handle{
-      width:44px;height:5px;border-radius:99px;
-      background:#333;
+      width:44px;
+      height:5px;
+      border-radius:99px;
+      background:#2a2a2c;
       margin:10px auto 6px;
     }
     .sheet-title{
@@ -169,13 +161,12 @@
       display:flex;
       align-items:center;
       gap:10px;
-      padding:10px 10px;
+      padding:10px;
       border-radius:12px;
-      border:1px solid transparent;
-      user-select:none;
+      cursor:pointer;
     }
     .trk:active{background:#202022}
-    .trk-num{width:24px; color:var(--muted); text-align:center}
+    .trk-num{width:24px;color:var(--muted);text-align:center;font-size:13px}
     .trk-info{min-width:0;flex:1}
     .trk-title{
       font-size:14px;
@@ -191,17 +182,13 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
-    .trk-dur{color:var(--muted); font-size:12px; flex:0 0 auto}
-
-    /* empty */
+    .trk-dur{color:var(--muted);font-size:12px;flex:0 0 auto}
     .empty{
       color:var(--muted);
       text-align:center;
       padding:28px 10px;
-      line-height:1.4;
+      line-height:1.6;
     }
-
-    /* create button bottom */
     .create{
       position:fixed;
       left:14px;
@@ -209,28 +196,28 @@
       bottom:14px;
       height:54px;
       border-radius:16px;
-      background:#1f1f22;
+      background:var(--btn);
       border:1px solid var(--line);
       display:flex;
       align-items:center;
       justify-content:center;
       font-weight:650;
+      font-size:15px;
       user-select:none;
+      cursor:pointer;
       z-index:10;
     }
-    .create:active{opacity:.9}
   </style>
 </head>
 <body>
+
   <div class="header" id="header">ПЛЕЙЛИСТЫ</div>
-
   <div class="wrap" id="list"></div>
-
-  <div class="create" id="btnCreate">Создать плейлист</div>
+  <div class="create" id="btnCreate">+ Создать плейлист</div>
 
   <div class="side-actions" id="sideActions">
-    <div class="fab" id="btnEdit" title="Редактировать">✎</div>
-    <div class="fab" id="btnDelete" title="Удалить">🗑</div>
+    <div class="fab" id="btnEdit">✎</div>
+    <div class="fab" id="btnDelete">🗑</div>
   </div>
 
   <div class="sheet-backdrop" id="backdrop"></div>
@@ -251,34 +238,49 @@
   const API_BASE = "https://music-player-server-jjkm.onrender.com";
 
   let playlists = {};
-  let openPl = null;     // имя открытого плейлиста (панель)
+  let openPl = null;
   let panelShown = false;
 
   function qs(id){ return document.getElementById(id); }
 
   function fmt(sec){
     sec = Math.floor(sec || 0);
-    const m = Math.floor(sec/60);
-    const s = sec%60;
-    return `${m}:${String(s).padStart(2,'0')}`;
+    return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
   }
 
   async function apiGet(path){
-    const url = API_BASE + path + (path.includes("?") ? "&" : "?") + "init_data=" + encodeURIComponent(tg.initData);
-    const r = await fetch(url);
+    const sep = path.includes("?") ? "&" : "?";
+    const r = await fetch(API_BASE + path + sep + "init_data=" + encodeURIComponent(tg.initData));
     const j = await r.json();
-    if (!r.ok) throw new Error(j.error || "api");
+    if (!r.ok) throw new Error(j.error || "api error");
     return j;
   }
 
+  async function apiPost(path, body){
+    const r = await fetch(API_BASE + path + "?init_data=" + encodeURIComponent(tg.initData), {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(body)
+    });
+    return await r.json();
+  }
+
+  async function apiDelete(path, body){
+    const r = await fetch(API_BASE + path + "?init_data=" + encodeURIComponent(tg.initData), {
+      method: "DELETE",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(body || {})
+    });
+    return await r.json();
+  }
+
   async function load(){
-    const list = qs("list");
-    list.innerHTML = `<div class="empty">Загрузка…</div>`;
+    qs("list").innerHTML = `<div class="empty">Загрузка…</div>`;
     try{
       playlists = await apiGet("/api/playlists");
       renderPlaylists();
     }catch(e){
-      list.innerHTML = `<div class="empty">Ошибка загрузки</div>`;
+      qs("list").innerHTML = `<div class="empty">Ошибка загрузки</div>`;
     }
   }
 
@@ -287,17 +289,15 @@
     const names = Object.keys(playlists);
 
     if (!names.length){
-      list.innerHTML = `<div class="empty">Плейлисты не найдены</div>`;
-      hidePanel();
-      hideSide();
+      list.innerHTML = `<div class="empty">Плейлистов пока нет</div>`;
+      hidePanel(); hideSide();
       return;
     }
 
     list.innerHTML = "";
     names.forEach(name=>{
       const pl = playlists[name];
-      const count = (pl.tracks || []).length;
-
+      const count = (pl.tracks||[]).length;
       const row = document.createElement("div");
       row.className = "pl";
       row.dataset.name = name;
@@ -318,35 +318,25 @@
 
       row.appendChild(cover);
       row.appendChild(info);
-
       row.addEventListener("click", ()=>togglePlaylist(name));
       list.appendChild(row);
     });
   }
 
   function togglePlaylist(name){
-    // правило ТЗ: повторное нажатие на тот же плейлист — закрыть панель и кнопки
     if (panelShown && openPl === name){
-      hidePanel();
-      hideSide();
-      return;
+      hidePanel(); hideSide(); return;
     }
     openPl = name;
     showPanel(name);
     showSide();
   }
 
-  function showSide(){
-    qs("sideActions").classList.add("show");
-  }
-  function hideSide(){
-    qs("sideActions").classList.remove("show");
-  }
+  function showSide(){ qs("sideActions").classList.add("show"); }
+  function hideSide(){ qs("sideActions").classList.remove("show"); }
 
   function showPanel(name){
-    const pl = playlists[name];
-    const tracks = (pl && pl.tracks) ? pl.tracks : [];
-
+    const tracks = (playlists[name]&&playlists[name].tracks)||[];
     qs("sheetName").textContent = name;
     qs("sheetCount").textContent = tracks.length ? `${tracks.length} тр.` : "";
 
@@ -355,14 +345,14 @@
       box.innerHTML = `<div class="empty">Плейлист пустой</div>`;
     } else {
       box.innerHTML = "";
-      tracks.forEach((t, i)=>{
+      tracks.forEach((t,i)=>{
         const div = document.createElement("div");
         div.className = "trk";
         div.innerHTML = `
           <div class="trk-num">${i+1}</div>
           <div class="trk-info">
-            <div class="trk-title">${(t.title || "Track")}</div>
-            <div class="trk-artist">${(t.artist || "")}</div>
+            <div class="trk-title">${t.title||"Track"}</div>
+            <div class="trk-artist">${t.artist||""}</div>
           </div>
           <div class="trk-dur">${fmt(t.duration)}</div>
         `;
@@ -384,39 +374,39 @@
   }
 
   function playTrack(t){
-    // пока просто отправляем аудио в Telegram (как fallback)
-    // дальше сделаем полноценный плеер-экран
     if (t.audio_url){
       const a = new Audio(t.audio_url);
       a.play().catch(()=>{});
     }
   }
 
-  // закрытие по нажатию на заголовок "ПЛЕЙЛИСТЫ" (ТЗ)
   qs("header").addEventListener("click", ()=>{
-    if (panelShown){
-      hidePanel();
-      hideSide();
+    if (panelShown){ hidePanel(); hideSide(); }
+  });
+
+  qs("backdrop").addEventListener("click", ()=>{
+    hidePanel(); hideSide();
+  });
+
+  qs("btnEdit").addEventListener("click", ()=>{
+    if (!openPl) return;
+    // следующий шаг — экран редактирования
+    alert("Редактирование: " + openPl);
+  });
+
+  qs("btnDelete").addEventListener("click", ()=>{
+    if (!openPl) return;
+    if (confirm(`Удалить плейлист «${openPl}»?`)){
+      apiDelete(`/api/playlist/${encodeURIComponent(openPl)}`).then(()=>{
+        hidePanel(); hideSide();
+        load();
+      });
     }
   });
 
-  // закрытие по клику на фон
-  qs("backdrop").addEventListener("click", ()=>{
-    hidePanel();
-    hideSide();
-  });
-
-  // заглушки кнопок (следующий шаг — сделаем редактирование/удаление/создание)
-  qs("btnEdit").addEventListener("click", ()=>{
-    if (!openPl) return;
-    alert("Редактирование: " + openPl);
-  });
-  qs("btnDelete").addEventListener("click", ()=>{
-    if (!openPl) return;
-    alert("Удаление: " + openPl);
-  });
   qs("btnCreate").addEventListener("click", ()=>{
-    alert("Создание плейлиста (шаг 1) — следующим шагом");
+    // следующий шаг — экран создания
+    alert("Создание плейлиста — следующий шаг");
   });
 
   load();
