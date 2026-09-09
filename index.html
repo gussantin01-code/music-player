@@ -14,6 +14,7 @@
       --line:#2a2a2c;
       --btn:#1e1e20;
       --danger:#ff5a5a;
+      --inner:#131314;
     }
     *{box-sizing:border-box}
     body{
@@ -45,6 +46,9 @@
     }
 
     /* playlist row */
+    .pl-block{
+      margin-bottom:10px;
+    }
     .pl{
       background:var(--card);
       border:1px solid var(--line);
@@ -53,11 +57,14 @@
       display:flex;
       align-items:center;
       gap:10px;
-      margin-bottom:10px;
       user-select:none;
       cursor:pointer;
     }
-    .pl.active{border-color:#444}
+    .pl.active{
+      border-bottom-left-radius:0;
+      border-bottom-right-radius:0;
+      border-bottom-color:transparent;
+    }
     .pl-cover{
       width:50px;
       height:50px;
@@ -109,81 +116,30 @@
     }
     .pl-btn:active{opacity:.8}
 
-    /* floating window overlay */
-    .overlay-bg{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.5);
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .16s;
-      z-index:50;
-    }
-    .overlay-bg.show{opacity:1;pointer-events:auto}
-
-    .float-win{
-      position:fixed;
-      left:16px;
-      right:16px;
-      top:50%;
-      transform:translateY(-50%) scale(.96);
-      max-height:70vh;
-      background:var(--card);
+    /* dropdown tracks */
+    .pl-dropdown{
+      display:none;
+      background:var(--inner);
       border:1px solid var(--line);
-      border-radius:18px;
-      display:flex;
-      flex-direction:column;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .16s,transform .16s;
-      z-index:60;
-      overflow:hidden;
-    }
-    .float-win.show{
-      opacity:1;
-      pointer-events:auto;
-      transform:translateY(-50%) scale(1);
-    }
-
-    .fw-header{
-      padding:14px 16px;
-      font-weight:700;
-      font-size:16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      border-bottom:1px solid var(--line);
-      flex:0 0 auto;
-    }
-    .fw-close{
-      width:32px;
-      height:32px;
-      border-radius:50%;
-      background:var(--btn);
-      border:none;
-      color:var(--text);
-      font-size:16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-    }
-    .fw-body{
+      border-top:none;
+      border-bottom-left-radius:14px;
+      border-bottom-right-radius:14px;
+      padding:6px 6px 10px;
+      max-height:45vh;
       overflow:auto;
-      padding:8px 8px 14px;
-      flex:1;
     }
+    .pl-dropdown.open{display:block}
 
     .trk{
       display:flex;
       align-items:center;
       gap:10px;
-      padding:10px;
-      border-radius:12px;
+      padding:9px 10px;
+      border-radius:10px;
       cursor:pointer;
     }
-    .trk:active{background:#202022}
-    .trk-num{width:24px;color:var(--muted);text-align:center;font-size:13px}
+    .trk:active{background:#1a1a1c}
+    .trk-num{width:22px;color:var(--muted);text-align:center;font-size:13px}
     .trk-info{min-width:0;flex:1}
     .trk-title{
       font-size:14px;
@@ -194,7 +150,7 @@
     .trk-artist{
       font-size:12px;
       color:var(--muted);
-      margin-top:2px;
+      margin-top:1px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -204,8 +160,9 @@
     .empty{
       color:var(--muted);
       text-align:center;
-      padding:28px 10px;
+      padding:20px 10px;
       line-height:1.6;
+      font-size:13px;
     }
 
     .create{
@@ -315,16 +272,6 @@
   <div class="wrap" id="list"></div>
   <div class="create" id="btnCreate">+ Создать плейлист</div>
 
-  <!-- Floating window: tracks -->
-  <div class="overlay-bg" id="overlay"></div>
-  <div class="float-win" id="floatWin">
-    <div class="fw-header">
-      <span id="fwName">—</span>
-      <button class="fw-close" id="fwClose">✕</button>
-    </div>
-    <div class="fw-body" id="fwBody"></div>
-  </div>
-
   <!-- Modal: create playlist step 1 -->
   <div class="modal-backdrop" id="mBack"></div>
   <div class="modal" id="mCreate">
@@ -364,7 +311,7 @@
   }
 
   async function apiGet(path){
-    const sep = path.includes("?") ? "&" : "?";
+    const sep = path.includes("?")?"&":"?";
     const r = await fetch(API_BASE+path+sep+"init_data="+encodeURIComponent(tg.initData));
     const j = await r.json();
     if(!r.ok) throw new Error(j.error||"api");
@@ -409,13 +356,17 @@
     list.innerHTML = "";
     names.forEach(name=>{
       const pl = playlists[name];
-      const count = (pl.tracks||[]).length;
+      const tracks = pl.tracks||[];
+      const isOpen = openPl===name;
 
+      // wrapper
+      const block = document.createElement("div");
+      block.className = "pl-block";
+
+      // row
       const row = document.createElement("div");
-      row.className = "pl" + (openPl===name ? " active" : "");
-      row.dataset.name = name;
+      row.className = "pl"+(isOpen?" active":"");
 
-      // cover
       const cover = document.createElement("div");
       cover.className = "pl-cover";
       if(pl.cover_url){
@@ -426,19 +377,17 @@
         cover.textContent = "♪";
       }
 
-      // info
       const info = document.createElement("div");
       info.className = "pl-info";
-      info.innerHTML = `<div class="pl-name">${name}</div><div class="pl-count">${count} тр.</div>`;
+      info.innerHTML = `<div class="pl-name">${name}</div><div class="pl-count">${tracks.length} тр.</div>`;
 
-      // inline action buttons
       const actions = document.createElement("div");
       actions.className = "pl-actions";
 
       const btnEdit = document.createElement("div");
       btnEdit.className = "pl-btn";
       btnEdit.textContent = "✏️";
-      btnEdit.addEventListener("click", (e)=>{
+      btnEdit.addEventListener("click",(e)=>{
         e.stopPropagation();
         alert("Редактирование — следующий шаг");
       });
@@ -446,12 +395,11 @@
       const btnDel = document.createElement("div");
       btnDel.className = "pl-btn";
       btnDel.textContent = "🗑️";
-      btnDel.addEventListener("click", async (e)=>{
+      btnDel.addEventListener("click",async(e)=>{
         e.stopPropagation();
-        if(confirm(`Удалить плейлист «${name}»?`)){
+        if(confirm(`Удалить «${name}»?`)){
           await apiDelete(`/api/playlist/${encodeURIComponent(name)}`);
           openPl = null;
-          closeFloat();
           await load();
         }
       });
@@ -463,57 +411,45 @@
       row.appendChild(info);
       row.appendChild(actions);
 
-      row.addEventListener("click", ()=>togglePlaylist(name));
-      list.appendChild(row);
-    });
-  }
-
-  function togglePlaylist(name){
-    if(openPl === name){
-      openPl = null;
-      closeFloat();
-      renderPlaylists();
-      return;
-    }
-    openPl = name;
-    renderPlaylists();
-    showFloat(name);
-  }
-
-  // ───── floating window ─────
-
-  function showFloat(name){
-    const tracks = (playlists[name]&&playlists[name].tracks)||[];
-    qs("fwName").textContent = name;
-
-    const box = qs("fwBody");
-    if(!tracks.length){
-      box.innerHTML = `<div class="empty">Плейлист пустой</div>`;
-    } else {
-      box.innerHTML = "";
-      tracks.forEach((t,i)=>{
-        const div = document.createElement("div");
-        div.className = "trk";
-        div.innerHTML = `
-          <div class="trk-num">${i+1}</div>
-          <div class="trk-info">
-            <div class="trk-title">${t.title||"Track"}</div>
-            <div class="trk-artist">${t.artist||""}</div>
-          </div>
-          <div class="trk-dur">${fmt(t.duration)}</div>
-        `;
-        div.addEventListener("click",()=>playTrack(t));
-        box.appendChild(div);
+      row.addEventListener("click",()=>{
+        if(openPl===name){ openPl=null; }
+        else { openPl=name; }
+        renderPlaylists();
       });
-    }
 
-    qs("overlay").classList.add("show");
-    qs("floatWin").classList.add("show");
-  }
+      block.appendChild(row);
 
-  function closeFloat(){
-    qs("overlay").classList.remove("show");
-    qs("floatWin").classList.remove("show");
+      // dropdown
+      const dd = document.createElement("div");
+      dd.className = "pl-dropdown"+(isOpen?" open":"");
+
+      if(isOpen){
+        if(!tracks.length){
+          dd.innerHTML = `<div class="empty">Плейлист пустой</div>`;
+        } else {
+          tracks.forEach((t,i)=>{
+            const trk = document.createElement("div");
+            trk.className = "trk";
+            trk.innerHTML = `
+              <div class="trk-num">${i+1}</div>
+              <div class="trk-info">
+                <div class="trk-title">${t.title||"Track"}</div>
+                <div class="trk-artist">${t.artist||""}</div>
+              </div>
+              <div class="trk-dur">${fmt(t.duration)}</div>
+            `;
+            trk.addEventListener("click",(e)=>{
+              e.stopPropagation();
+              playTrack(t);
+            });
+            dd.appendChild(trk);
+          });
+        }
+      }
+
+      block.appendChild(dd);
+      list.appendChild(block);
+    });
   }
 
   function playTrack(t){
@@ -524,39 +460,20 @@
   }
 
   qs("header").addEventListener("click",()=>{
-    if(openPl){
-      openPl = null;
-      closeFloat();
-      renderPlaylists();
-    }
-  });
-
-  qs("overlay").addEventListener("click",()=>{
-    openPl = null;
-    closeFloat();
-    renderPlaylists();
-  });
-
-  qs("fwClose").addEventListener("click",()=>{
-    openPl = null;
-    closeFloat();
-    renderPlaylists();
+    if(openPl){ openPl=null; renderPlaylists(); }
   });
 
   // ───── create playlist step 1 ─────
 
   function showCreateModal(){
     openPl = null;
-    closeFloat();
     renderPlaylists();
-
     qs("plErr").textContent = "";
     qs("plName").value = "";
     createCoverFile = null;
     qs("coverImg").style.display = "none";
     qs("coverPlus").style.display = "block";
     qs("coverImg").src = "";
-
     qs("mBack").classList.add("show");
     qs("mCreate").classList.add("show");
     setTimeout(()=>qs("plName").focus(),30);
@@ -567,35 +484,28 @@
     qs("mCreate").classList.remove("show");
   }
 
-  qs("btnCreate").addEventListener("click", showCreateModal);
-  qs("mBack").addEventListener("click", hideCreateModal);
-  qs("plCancel").addEventListener("click", hideCreateModal);
+  qs("btnCreate").addEventListener("click",showCreateModal);
+  qs("mBack").addEventListener("click",hideCreateModal);
+  qs("plCancel").addEventListener("click",hideCreateModal);
 
-  qs("coverPick").addEventListener("click",()=>{
-    qs("coverFile").click();
-  });
+  qs("coverPick").addEventListener("click",()=>{ qs("coverFile").click(); });
 
   qs("coverFile").addEventListener("change",(e)=>{
     const f = e.target.files&&e.target.files[0];
     if(!f) return;
     createCoverFile = f;
-    const url = URL.createObjectURL(f);
-    qs("coverImg").src = url;
+    qs("coverImg").src = URL.createObjectURL(f);
     qs("coverImg").style.display = "block";
     qs("coverPlus").style.display = "none";
   });
 
-  qs("plNext").addEventListener("click", async ()=>{
+  qs("plNext").addEventListener("click",async()=>{
     const name = qs("plName").value.trim();
-    if(!name){
-      qs("plErr").textContent = "Название обязательно";
-      return;
-    }
+    if(!name){ qs("plErr").textContent = "Название обязательно"; return; }
     try{
       await apiPost("/api/playlist",{name});
       hideCreateModal();
       await load();
-      // TODO: step 2 — добавление треков
     }catch(e){
       qs("plErr").textContent = "Плейлист уже существует";
     }
