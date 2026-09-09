@@ -18,7 +18,7 @@
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
       background:var(--bg);
       color:var(--text);
       height:100vh;
@@ -44,6 +44,7 @@
       padding:14px 14px 90px;
     }
 
+    /* playlist row */
     .pl{
       background:var(--card);
       border:1px solid var(--line);
@@ -51,116 +52,128 @@
       padding:10px;
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:10px;
       margin-bottom:10px;
       user-select:none;
       cursor:pointer;
     }
+    .pl.active{border-color:#444}
     .pl-cover{
-      width:54px;
-      height:54px;
+      width:50px;
+      height:50px;
       border-radius:12px;
       background:#222;
       overflow:hidden;
-      flex:0 0 auto;
+      flex:0 0 50px;
       display:flex;
       align-items:center;
       justify-content:center;
       color:var(--muted);
-      font-size:22px;
+      font-size:20px;
     }
     .pl-cover img{width:100%;height:100%;object-fit:cover}
     .pl-info{min-width:0;flex:1}
     .pl-name{
       font-weight:650;
-      font-size:16px;
+      font-size:15px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
     .pl-count{
-      margin-top:3px;
+      margin-top:2px;
       color:var(--muted);
       font-size:12px;
     }
 
-    .side-actions{
-      position:fixed;
-      right:14px;
-      top:86px;
+    /* inline action buttons */
+    .pl-actions{
       display:none;
-      flex-direction:column;
-      gap:10px;
-      z-index:40;
+      gap:6px;
+      flex:0 0 auto;
+      align-items:center;
     }
-    .side-actions.show{display:flex}
-    .fab{
-      width:44px;
-      height:44px;
-      border-radius:14px;
+    .pl.active .pl-actions{display:flex}
+    .pl-btn{
+      width:38px;
+      height:38px;
+      border-radius:10px;
       background:var(--btn);
       border:1px solid var(--line);
       display:flex;
       align-items:center;
       justify-content:center;
-      color:var(--text);
-      font-size:18px;
-      user-select:none;
+      font-size:16px;
       cursor:pointer;
+      user-select:none;
     }
+    .pl-btn:active{opacity:.8}
 
-    .sheet-backdrop{
+    /* floating window overlay */
+    .overlay-bg{
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,.35);
+      background:rgba(0,0,0,.5);
       opacity:0;
       pointer-events:none;
-      transition:opacity .18s;
-      z-index:20;
+      transition:opacity .16s;
+      z-index:50;
     }
-    .sheet-backdrop.show{opacity:1;pointer-events:auto}
-    .sheet{
+    .overlay-bg.show{opacity:1;pointer-events:auto}
+
+    .float-win{
       position:fixed;
-      left:0;
-      right:0;
-      bottom:-75vh;
-      height:72vh;
+      left:16px;
+      right:16px;
+      top:50%;
+      transform:translateY(-50%) scale(.96);
+      max-height:70vh;
       background:var(--card);
-      border-top:1px solid var(--line);
-      border-top-left-radius:18px;
-      border-top-right-radius:18px;
-      transition:bottom .22s ease;
-      z-index:30;
+      border:1px solid var(--line);
+      border-radius:18px;
       display:flex;
       flex-direction:column;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .16s,transform .16s;
+      z-index:60;
+      overflow:hidden;
     }
-    .sheet.show{bottom:0}
-    .sheet-handle{
-      width:44px;
-      height:5px;
-      border-radius:99px;
-      background:#2a2a2c;
-      margin:10px auto 6px;
+    .float-win.show{
+      opacity:1;
+      pointer-events:auto;
+      transform:translateY(-50%) scale(1);
     }
-    .sheet-title{
-      padding:6px 16px 10px;
+
+    .fw-header{
+      padding:14px 16px;
       font-weight:700;
+      font-size:16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
       border-bottom:1px solid var(--line);
+      flex:0 0 auto;
     }
-    .sheet-title .name{
-      min-width:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+    .fw-close{
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      background:var(--btn);
+      border:none;
+      color:var(--text);
+      font-size:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
     }
-    .tracks{
+    .fw-body{
       overflow:auto;
-      padding:10px 10px 18px;
+      padding:8px 8px 14px;
+      flex:1;
     }
+
     .trk{
       display:flex;
       align-items:center;
@@ -214,7 +227,7 @@
       z-index:10;
     }
 
-    /* ───────── modal ───────── */
+    /* modal create */
     .modal-backdrop{
       position:fixed;
       inset:0;
@@ -233,7 +246,7 @@
       transform:translateY(30px);
       opacity:0;
       pointer-events:none;
-      transition:opacity .16s, transform .16s;
+      transition:opacity .16s,transform .16s;
       z-index:90;
       background:var(--card);
       border:1px solid var(--line);
@@ -250,34 +263,23 @@
       margin-bottom:12px;
       text-align:center;
     }
-
     .cover-pick{
       width:110px;
       height:110px;
       border-radius:18px;
-      border:2px dashed #999999;
+      border:2px dashed #999;
       margin:0 auto 14px;
       display:flex;
       align-items:center;
       justify-content:center;
-      color:#999999;
+      color:#999;
       user-select:none;
       cursor:pointer;
       overflow:hidden;
-      position:relative;
     }
     .cover-pick img{width:100%;height:100%;object-fit:cover}
-    .cover-plus{
-      font-size:34px;
-      line-height:1;
-    }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      margin-bottom:14px;
-    }
+    .cover-plus{font-size:34px;line-height:1}
+    .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
     .label{font-size:12px;color:var(--muted)}
     input[type="text"]{
       height:46px;
@@ -289,11 +291,7 @@
       outline:none;
       font-size:15px;
     }
-
-    .row-btns{
-      display:flex;
-      gap:10px;
-    }
+    .row-btns{display:flex;gap:10px}
     .btn{
       flex:1;
       height:46px;
@@ -302,19 +300,13 @@
       background:var(--btn);
       color:var(--text);
       font-weight:650;
+      font-size:14px;
       cursor:pointer;
-      user-select:none;
     }
     .btn:active{opacity:.9}
     .btn.primary{background:#2a2a2d}
     .btn.danger{border-color:#3a2a2a;color:var(--danger)}
-    .err{
-      color:var(--danger);
-      font-size:12px;
-      text-align:center;
-      min-height:16px;
-      margin-top:2px;
-    }
+    .err{color:var(--danger);font-size:12px;text-align:center;min-height:16px;margin-top:2px}
   </style>
 </head>
 <body>
@@ -323,38 +315,30 @@
   <div class="wrap" id="list"></div>
   <div class="create" id="btnCreate">+ Создать плейлист</div>
 
-  <div class="side-actions" id="sideActions">
-    <div class="fab" id="btnEdit">✎</div>
-    <div class="fab" id="btnDelete">🗑</div>
-  </div>
-
-  <div class="sheet-backdrop" id="backdrop"></div>
-  <div class="sheet" id="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">
-      <div class="name" id="sheetName">—</div>
-      <div style="color:var(--muted);font-size:12px" id="sheetCount"></div>
+  <!-- Floating window: tracks -->
+  <div class="overlay-bg" id="overlay"></div>
+  <div class="float-win" id="floatWin">
+    <div class="fw-header">
+      <span id="fwName">—</span>
+      <button class="fw-close" id="fwClose">✕</button>
     </div>
-    <div class="tracks" id="tracks"></div>
+    <div class="fw-body" id="fwBody"></div>
   </div>
 
-  <!-- Modal: Create playlist step 1 -->
+  <!-- Modal: create playlist step 1 -->
   <div class="modal-backdrop" id="mBack"></div>
   <div class="modal" id="mCreate">
     <div class="modal-title">Создать плейлист</div>
-
     <div class="cover-pick" id="coverPick">
       <div class="cover-plus" id="coverPlus">+</div>
       <img id="coverImg" style="display:none" />
     </div>
     <input id="coverFile" type="file" accept="image/*" style="display:none" />
-
     <div class="field">
       <div class="label">Название (обязательно)</div>
       <input type="text" id="plName" placeholder="Название плейлиста" />
       <div class="err" id="plErr"></div>
     </div>
-
     <div class="row-btns">
       <button class="btn danger" id="plCancel">Отмена</button>
       <button class="btn primary" id="plNext">Далее</button>
@@ -370,45 +354,36 @@
 
   let playlists = {};
   let openPl = null;
-  let panelShown = false;
-
-  // create step 1 state
   let createCoverFile = null;
 
   function qs(id){ return document.getElementById(id); }
 
   function fmt(sec){
-    sec = Math.floor(sec || 0);
+    sec = Math.floor(sec||0);
     return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
   }
 
   async function apiGet(path){
     const sep = path.includes("?") ? "&" : "?";
-    const r = await fetch(API_BASE + path + sep + "init_data=" + encodeURIComponent(tg.initData));
+    const r = await fetch(API_BASE+path+sep+"init_data="+encodeURIComponent(tg.initData));
     const j = await r.json();
-    if (!r.ok) throw new Error(j.error || "api error");
+    if(!r.ok) throw new Error(j.error||"api");
     return j;
   }
-
-  async function apiPost(path, body){
-    const r = await fetch(API_BASE + path + "?init_data=" + encodeURIComponent(tg.initData), {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify(body || {})
+  async function apiPost(path,body){
+    const r = await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
+      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})
     });
     const j = await r.json();
-    if (!r.ok) throw new Error(j.error || "api error");
+    if(!r.ok) throw new Error(j.error||"api");
     return j;
   }
-
-  async function apiDelete(path, body){
-    const r = await fetch(API_BASE + path + "?init_data=" + encodeURIComponent(tg.initData), {
-      method: "DELETE",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify(body || {})
+  async function apiDelete(path,body){
+    const r = await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
+      method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})
     });
     const j = await r.json();
-    if (!r.ok) throw new Error(j.error || "api error");
+    if(!r.ok) throw new Error(j.error||"api");
     return j;
   }
 
@@ -426,9 +401,8 @@
     const list = qs("list");
     const names = Object.keys(playlists);
 
-    if (!names.length){
+    if(!names.length){
       list.innerHTML = `<div class="empty">Плейлисты не найдены</div>`;
-      hidePanel(); hideSide();
       return;
     }
 
@@ -438,12 +412,13 @@
       const count = (pl.tracks||[]).length;
 
       const row = document.createElement("div");
-      row.className = "pl";
+      row.className = "pl" + (openPl===name ? " active" : "");
       row.dataset.name = name;
 
+      // cover
       const cover = document.createElement("div");
       cover.className = "pl-cover";
-      if (pl.cover_url){
+      if(pl.cover_url){
         const img = document.createElement("img");
         img.src = pl.cover_url;
         cover.appendChild(img);
@@ -451,36 +426,68 @@
         cover.textContent = "♪";
       }
 
+      // info
       const info = document.createElement("div");
       info.className = "pl-info";
       info.innerHTML = `<div class="pl-name">${name}</div><div class="pl-count">${count} тр.</div>`;
 
+      // inline action buttons
+      const actions = document.createElement("div");
+      actions.className = "pl-actions";
+
+      const btnEdit = document.createElement("div");
+      btnEdit.className = "pl-btn";
+      btnEdit.textContent = "✏️";
+      btnEdit.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        alert("Редактирование — следующий шаг");
+      });
+
+      const btnDel = document.createElement("div");
+      btnDel.className = "pl-btn";
+      btnDel.textContent = "🗑️";
+      btnDel.addEventListener("click", async (e)=>{
+        e.stopPropagation();
+        if(confirm(`Удалить плейлист «${name}»?`)){
+          await apiDelete(`/api/playlist/${encodeURIComponent(name)}`);
+          openPl = null;
+          closeFloat();
+          await load();
+        }
+      });
+
+      actions.appendChild(btnEdit);
+      actions.appendChild(btnDel);
+
       row.appendChild(cover);
       row.appendChild(info);
+      row.appendChild(actions);
+
       row.addEventListener("click", ()=>togglePlaylist(name));
       list.appendChild(row);
     });
   }
 
   function togglePlaylist(name){
-    if (panelShown && openPl === name){
-      hidePanel(); hideSide(); return;
+    if(openPl === name){
+      openPl = null;
+      closeFloat();
+      renderPlaylists();
+      return;
     }
     openPl = name;
-    showPanel(name);
-    showSide();
+    renderPlaylists();
+    showFloat(name);
   }
 
-  function showSide(){ qs("sideActions").classList.add("show"); }
-  function hideSide(){ qs("sideActions").classList.remove("show"); }
+  // ───── floating window ─────
 
-  function showPanel(name){
+  function showFloat(name){
     const tracks = (playlists[name]&&playlists[name].tracks)||[];
-    qs("sheetName").textContent = name;
-    qs("sheetCount").textContent = tracks.length ? `${tracks.length} тр.` : "";
+    qs("fwName").textContent = name;
 
-    const box = qs("tracks");
-    if (!tracks.length){
+    const box = qs("fwBody");
+    if(!tracks.length){
       box.innerHTML = `<div class="empty">Плейлист пустой</div>`;
     } else {
       box.innerHTML = "";
@@ -495,69 +502,64 @@
           </div>
           <div class="trk-dur">${fmt(t.duration)}</div>
         `;
-        div.addEventListener("click", ()=>playTrack(t));
+        div.addEventListener("click",()=>playTrack(t));
         box.appendChild(div);
       });
     }
 
-    qs("backdrop").classList.add("show");
-    qs("sheet").classList.add("show");
-    panelShown = true;
+    qs("overlay").classList.add("show");
+    qs("floatWin").classList.add("show");
   }
 
-  function hidePanel(){
-    qs("backdrop").classList.remove("show");
-    qs("sheet").classList.remove("show");
-    panelShown = false;
-    openPl = null;
+  function closeFloat(){
+    qs("overlay").classList.remove("show");
+    qs("floatWin").classList.remove("show");
   }
 
   function playTrack(t){
-    if (t.audio_url){
+    if(t.audio_url){
       const a = new Audio(t.audio_url);
       a.play().catch(()=>{});
     }
   }
 
-  qs("header").addEventListener("click", ()=>{
-    if (panelShown){ hidePanel(); hideSide(); }
-  });
-
-  qs("backdrop").addEventListener("click", ()=>{
-    hidePanel(); hideSide();
-  });
-
-  qs("btnDelete").addEventListener("click", async ()=>{
-    if (!openPl) return;
-    if (confirm(`Удалить плейлист «${openPl}»?`)){
-      await apiDelete(`/api/playlist/${encodeURIComponent(openPl)}`);
-      hidePanel(); hideSide();
-      await load();
+  qs("header").addEventListener("click",()=>{
+    if(openPl){
+      openPl = null;
+      closeFloat();
+      renderPlaylists();
     }
   });
 
-  qs("btnEdit").addEventListener("click", ()=>{
-    if (!openPl) return;
-    alert("Редактирование — следующий шаг");
+  qs("overlay").addEventListener("click",()=>{
+    openPl = null;
+    closeFloat();
+    renderPlaylists();
   });
 
-  // ───────── Create playlist step 1 ─────────
+  qs("fwClose").addEventListener("click",()=>{
+    openPl = null;
+    closeFloat();
+    renderPlaylists();
+  });
+
+  // ───── create playlist step 1 ─────
 
   function showCreateModal(){
-    // закрыть панели
-    hidePanel(); hideSide();
+    openPl = null;
+    closeFloat();
+    renderPlaylists();
 
     qs("plErr").textContent = "";
     qs("plName").value = "";
     createCoverFile = null;
-
     qs("coverImg").style.display = "none";
     qs("coverPlus").style.display = "block";
     qs("coverImg").src = "";
 
     qs("mBack").classList.add("show");
     qs("mCreate").classList.add("show");
-    setTimeout(()=>qs("plName").focus(), 30);
+    setTimeout(()=>qs("plName").focus(),30);
   }
 
   function hideCreateModal(){
@@ -569,13 +571,13 @@
   qs("mBack").addEventListener("click", hideCreateModal);
   qs("plCancel").addEventListener("click", hideCreateModal);
 
-  qs("coverPick").addEventListener("click", ()=>{
+  qs("coverPick").addEventListener("click",()=>{
     qs("coverFile").click();
   });
 
-  qs("coverFile").addEventListener("change", (e)=>{
-    const f = e.target.files && e.target.files[0];
-    if (!f) return;
+  qs("coverFile").addEventListener("change",(e)=>{
+    const f = e.target.files&&e.target.files[0];
+    if(!f) return;
     createCoverFile = f;
     const url = URL.createObjectURL(f);
     qs("coverImg").src = url;
@@ -585,19 +587,17 @@
 
   qs("plNext").addEventListener("click", async ()=>{
     const name = qs("plName").value.trim();
-    if (!name){
+    if(!name){
       qs("plErr").textContent = "Название обязательно";
       return;
     }
-
-    // пока: создаём плейлист без обложки (обложку подключим следующим шагом через upload endpoint)
     try{
-      await apiPost("/api/playlist", {name});
+      await apiPost("/api/playlist",{name});
       hideCreateModal();
       await load();
-      alert("Далее: добавление треков (шаг 2)");
+      // TODO: step 2 — добавление треков
     }catch(e){
-      qs("plErr").textContent = "Не удалось создать (возможно уже существует)";
+      qs("plErr").textContent = "Плейлист уже существует";
     }
   });
 
