@@ -26,8 +26,13 @@
       overflow:hidden;
     }
 
+    /* ── screens ── */
+    .screen{display:none;flex-direction:column;height:100vh}
+    .screen.active{display:flex}
+
     .header{
       height:56px;
+      flex:0 0 56px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -37,18 +42,26 @@
       border-bottom:1px solid var(--line);
       user-select:none;
       cursor:pointer;
+      position:relative;
     }
+    .header .back{
+      position:absolute;
+      left:14px;
+      font-size:20px;
+      color:var(--muted);
+      cursor:pointer;
+      padding:8px;
+    }
+    .header .title{font-size:14px}
 
     .wrap{
-      height:calc(100vh - 56px);
+      flex:1;
       overflow:auto;
       padding:14px 14px 90px;
     }
 
-    /* playlist row */
-    .pl-block{
-      margin-bottom:10px;
-    }
+    /* playlists */
+    .pl-block{margin-bottom:10px}
     .pl{
       background:var(--card);
       border:1px solid var(--line);
@@ -66,57 +79,25 @@
       border-bottom-color:transparent;
     }
     .pl-cover{
-      width:50px;
-      height:50px;
-      border-radius:12px;
-      background:#222;
-      overflow:hidden;
-      flex:0 0 50px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      font-size:20px;
+      width:50px;height:50px;border-radius:12px;
+      background:#222;overflow:hidden;flex:0 0 50px;
+      display:flex;align-items:center;justify-content:center;
+      color:var(--muted);font-size:20px;
     }
     .pl-cover img{width:100%;height:100%;object-fit:cover}
     .pl-info{min-width:0;flex:1}
-    .pl-name{
-      font-weight:650;
-      font-size:15px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .pl-count{
-      margin-top:2px;
-      color:var(--muted);
-      font-size:12px;
-    }
-
-    /* inline action buttons */
-    .pl-actions{
-      display:none;
-      gap:6px;
-      flex:0 0 auto;
-      align-items:center;
-    }
+    .pl-name{font-weight:650;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pl-count{margin-top:2px;color:var(--muted);font-size:12px}
+    .pl-actions{display:none;gap:6px;flex:0 0 auto;align-items:center}
     .pl.active .pl-actions{display:flex}
     .pl-btn{
-      width:38px;
-      height:38px;
-      border-radius:10px;
-      background:var(--btn);
-      border:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:16px;
-      cursor:pointer;
-      user-select:none;
+      width:38px;height:38px;border-radius:10px;
+      background:var(--btn);border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;cursor:pointer;user-select:none;
     }
     .pl-btn:active{opacity:.8}
 
-    /* dropdown tracks */
     .pl-dropdown{
       display:none;
       background:var(--inner);
@@ -131,166 +112,237 @@
     .pl-dropdown.open{display:block}
 
     .trk{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:9px 10px;
-      border-radius:10px;
-      cursor:pointer;
+      display:flex;align-items:center;gap:10px;
+      padding:9px 10px;border-radius:10px;cursor:pointer;
     }
     .trk:active{background:#1a1a1c}
     .trk-num{width:22px;color:var(--muted);text-align:center;font-size:13px}
     .trk-info{min-width:0;flex:1}
-    .trk-title{
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .trk-artist{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:1px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .trk-title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .trk-artist{font-size:12px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .trk-dur{color:var(--muted);font-size:12px;flex:0 0 auto}
 
     .empty{
-      color:var(--muted);
-      text-align:center;
-      padding:20px 10px;
-      line-height:1.6;
-      font-size:13px;
+      color:var(--muted);text-align:center;
+      padding:20px 10px;line-height:1.6;font-size:13px;
     }
 
     .create{
-      position:fixed;
-      left:14px;
-      right:14px;
-      bottom:14px;
-      height:54px;
-      border-radius:16px;
-      background:var(--btn);
-      border:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:650;
-      font-size:15px;
-      user-select:none;
-      cursor:pointer;
-      z-index:10;
+      position:fixed;left:14px;right:14px;bottom:14px;
+      height:54px;border-radius:16px;
+      background:var(--btn);border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:650;font-size:15px;
+      user-select:none;cursor:pointer;z-index:10;
     }
 
-    /* modal create */
+    /* ── modal ── */
     .modal-backdrop{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.55);
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .16s;
-      z-index:80;
+      position:fixed;inset:0;background:rgba(0,0,0,.55);
+      opacity:0;pointer-events:none;transition:opacity .16s;z-index:80;
     }
     .modal-backdrop.show{opacity:1;pointer-events:auto}
     .modal{
-      position:fixed;
-      left:14px;
-      right:14px;
-      top:50%;
+      position:fixed;left:14px;right:14px;top:50%;
       transform:translateY(30px);
-      opacity:0;
-      pointer-events:none;
+      opacity:0;pointer-events:none;
       transition:opacity .16s,transform .16s;
-      z-index:90;
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
+      z-index:90;background:var(--card);
+      border:1px solid var(--line);border-radius:18px;padding:14px;
     }
-    .modal.show{
-      transform:translateY(-50%);
-      opacity:1;
-      pointer-events:auto;
-    }
-    .modal-title{
-      font-weight:750;
-      margin-bottom:12px;
-      text-align:center;
-    }
+    .modal.show{transform:translateY(-50%);opacity:1;pointer-events:auto}
+    .modal-title{font-weight:750;margin-bottom:12px;text-align:center}
+
     .cover-pick{
-      width:110px;
-      height:110px;
-      border-radius:18px;
-      border:2px dashed #999;
-      margin:0 auto 14px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#999;
-      user-select:none;
-      cursor:pointer;
-      overflow:hidden;
+      width:110px;height:110px;border-radius:18px;
+      border:2px dashed #999;margin:0 auto 14px;
+      display:flex;align-items:center;justify-content:center;
+      color:#999;user-select:none;cursor:pointer;overflow:hidden;
     }
     .cover-pick img{width:100%;height:100%;object-fit:cover}
     .cover-plus{font-size:34px;line-height:1}
+
     .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
     .label{font-size:12px;color:var(--muted)}
     input[type="text"]{
-      height:46px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#121213;
-      color:var(--text);
-      padding:0 12px;
-      outline:none;
-      font-size:15px;
+      height:46px;border-radius:14px;
+      border:1px solid var(--line);background:#121213;
+      color:var(--text);padding:0 12px;outline:none;font-size:15px;
     }
     .row-btns{display:flex;gap:10px}
     .btn{
-      flex:1;
-      height:46px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:var(--btn);
-      color:var(--text);
-      font-weight:650;
-      font-size:14px;
-      cursor:pointer;
+      flex:1;height:46px;border-radius:14px;
+      border:1px solid var(--line);background:var(--btn);
+      color:var(--text);font-weight:650;font-size:14px;cursor:pointer;
     }
     .btn:active{opacity:.9}
     .btn.primary{background:#2a2a2d}
     .btn.danger{border-color:#3a2a2a;color:var(--danger)}
     .err{color:var(--danger);font-size:12px;text-align:center;min-height:16px;margin-top:2px}
+
+    /* ── step 2 screen ── */
+    .s2-cover-pick{
+      width:100px;height:100px;border-radius:16px;
+      border:2px dashed #999;
+      display:flex;align-items:center;justify-content:center;
+      color:#999;cursor:pointer;overflow:hidden;flex:0 0 100px;
+    }
+    .s2-cover-pick img{width:100%;height:100%;object-fit:cover}
+
+    .s2-top{
+      display:flex;gap:14px;align-items:center;
+      padding:14px 14px 10px;border-bottom:1px solid var(--line);
+    }
+    .s2-top-info{flex:1;min-width:0}
+    .s2-name-input{
+      width:100%;height:42px;border-radius:12px;
+      border:1px solid var(--line);background:#121213;
+      color:var(--text);padding:0 12px;outline:none;font-size:15px;
+    }
+
+    .s2-tracks{
+      flex:1;overflow:auto;padding:10px 14px;
+    }
+
+    .s2-trk{
+      display:flex;align-items:center;gap:10px;
+      padding:10px;border-radius:12px;
+      background:var(--card);border:1px solid var(--line);
+      margin-bottom:8px;cursor:pointer;
+      user-select:none;
+    }
+    .s2-trk:active{opacity:.85}
+    .s2-trk-cover{
+      width:42px;height:42px;border-radius:10px;
+      background:#222;overflow:hidden;flex:0 0 42px;
+      display:flex;align-items:center;justify-content:center;
+      color:var(--muted);font-size:18px;
+    }
+    .s2-trk-cover img{width:100%;height:100%;object-fit:cover}
+    .s2-trk-info{min-width:0;flex:1}
+    .s2-trk-title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .s2-trk-artist{font-size:12px;color:var(--muted);margin-top:1px}
+
+    /* add track button (plus icon) */
+    .s2-add-btn{
+      display:flex;align-items:center;gap:10px;
+      padding:10px;border-radius:12px;
+      border:1px dashed var(--line);
+      margin-bottom:8px;cursor:pointer;
+      color:var(--muted);
+    }
+    .s2-add-icon{
+      width:42px;height:42px;border-radius:10px;
+      border:2px dashed #555;
+      display:flex;align-items:center;justify-content:center;
+      font-size:22px;flex:0 0 42px;
+    }
+
+    .s2-bottom{
+      flex:0 0 auto;
+      padding:10px 14px 14px;
+      border-top:1px solid var(--line);
+      display:flex;flex-direction:column;gap:8px;
+    }
+    .s2-import-btn{
+      height:46px;border-radius:14px;
+      background:var(--btn);border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:600;font-size:14px;
+      cursor:pointer;user-select:none;
+    }
+    .s2-actions{display:flex;gap:10px}
+
+    /* long press delete confirm */
+    .confirm-del{
+      position:fixed;left:16px;right:16px;bottom:80px;
+      background:#2a1a1a;border:1px solid #5a2a2a;
+      border-radius:14px;padding:14px;
+      display:none;z-index:100;
+      flex-direction:column;gap:10px;
+    }
+    .confirm-del.show{display:flex}
+    .confirm-del-text{font-size:14px;color:var(--text);text-align:center}
+    .confirm-del-btns{display:flex;gap:10px}
+
+    /* spinner */
+    .spin{
+      display:inline-block;width:18px;height:18px;
+      border:2px solid #444;border-top-color:var(--text);
+      border-radius:50%;animation:spin .7s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
 
-  <div class="header" id="header">ПЛЕЙЛИСТЫ</div>
+<!-- ═══════════════════════════
+     Screen 1: Плейлисты
+═══════════════════════════ -->
+<div class="screen active" id="s1">
+  <div class="header" id="header">
+    <div class="title">ПЛЕЙЛИСТЫ</div>
+  </div>
   <div class="wrap" id="list"></div>
   <div class="create" id="btnCreate">+ Создать плейлист</div>
+</div>
 
-  <!-- Modal: create playlist step 1 -->
-  <div class="modal-backdrop" id="mBack"></div>
-  <div class="modal" id="mCreate">
-    <div class="modal-title">Создать плейлист</div>
-    <div class="cover-pick" id="coverPick">
-      <div class="cover-plus" id="coverPlus">+</div>
-      <img id="coverImg" style="display:none" />
+<!-- ═══════════════════════════
+     Screen 2: Создать/Редактировать плейлист
+═══════════════════════════ -->
+<div class="screen" id="s2">
+  <div class="header">
+    <span class="back" id="s2Back">‹</span>
+    <div class="title" id="s2Title">Новый плейлист</div>
+  </div>
+
+  <div class="s2-top">
+    <div class="s2-cover-pick" id="s2CoverPick">
+      <div class="cover-plus" id="s2CoverPlus">+</div>
+      <img id="s2CoverImg" style="display:none" />
     </div>
-    <input id="coverFile" type="file" accept="image/*" style="display:none" />
-    <div class="field">
-      <div class="label">Название (обязательно)</div>
-      <input type="text" id="plName" placeholder="Название плейлиста" />
-      <div class="err" id="plErr"></div>
-    </div>
-    <div class="row-btns">
-      <button class="btn danger" id="plCancel">Отмена</button>
-      <button class="btn primary" id="plNext">Далее</button>
+    <div class="s2-top-info">
+      <input type="text" class="s2-name-input" id="s2NameInput" placeholder="Название плейлиста" />
+      <div class="err" id="s2Err"></div>
     </div>
   </div>
+
+  <div class="s2-tracks" id="s2TracksList"></div>
+
+  <div class="s2-bottom">
+    <div class="s2-import-btn" id="s2ImportBtn">
+      Импорт треков из бота
+    </div>
+    <div class="s2-actions">
+      <button class="btn danger" id="s2Cancel">Отмена</button>
+      <button class="btn primary" id="s2Save">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- file input (hidden) -->
+<input id="s2FileInput" type="file" accept="audio/*" style="display:none" multiple />
+<input id="s1CoverFile" type="file" accept="image/*" style="display:none" />
+
+<!-- long-press confirm delete -->
+<div class="confirm-del" id="confirmDel">
+  <div class="confirm-del-text" id="confirmDelText">Удалить трек?</div>
+  <div class="confirm-del-btns">
+    <button class="btn" id="confirmDelNo">Отмена</button>
+    <button class="btn danger" id="confirmDelYes">Удалить</button>
+  </div>
+</div>
+
+<!-- import pending modal -->
+<div class="modal-backdrop" id="importBack"></div>
+<div class="modal" id="importModal">
+  <div class="modal-title">Импорт треков из бота</div>
+  <div id="importList" style="max-height:40vh;overflow:auto;margin-bottom:14px"></div>
+  <div class="row-btns">
+    <button class="btn danger" id="importCancel">Закрыть</button>
+    <button class="btn primary" id="importApply">Добавить всё</button>
+  </div>
+</div>
 
 <script>
   const tg = window.Telegram.WebApp;
@@ -299,138 +351,153 @@
 
   const API_BASE = "https://music-player-server-jjkm.onrender.com";
 
-  let playlists = {};
-  let openPl = null;
-  let createCoverFile = null;
+  let playlists  = {};
+  let openPl     = null;
+
+  // s2 state
+  let s2Mode      = "create"; // "create" | "edit"
+  let s2PlName    = null;     // original name (for edit)
+  let s2Tracks    = [];       // working copy of tracks
+  let s2Cover     = null;     // File object or null
+  let s2DelIndex  = null;
+  let longTimer   = null;
 
   function qs(id){ return document.getElementById(id); }
-
   function fmt(sec){
-    sec = Math.floor(sec||0);
+    sec=Math.floor(sec||0);
     return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
   }
 
+  // ── API helpers ──
   async function apiGet(path){
-    const sep = path.includes("?")?"&":"?";
-    const r = await fetch(API_BASE+path+sep+"init_data="+encodeURIComponent(tg.initData));
-    const j = await r.json();
+    const sep=path.includes("?")?"&":"?";
+    const r=await fetch(API_BASE+path+sep+"init_data="+encodeURIComponent(tg.initData));
+    const j=await r.json();
     if(!r.ok) throw new Error(j.error||"api");
     return j;
   }
   async function apiPost(path,body){
-    const r = await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
-      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})
+    const r=await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body||{})
     });
-    const j = await r.json();
+    const j=await r.json();
     if(!r.ok) throw new Error(j.error||"api");
     return j;
   }
   async function apiDelete(path,body){
-    const r = await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
-      method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})
+    const r=await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
+      method:"DELETE",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body||{})
     });
-    const j = await r.json();
+    const j=await r.json();
     if(!r.ok) throw new Error(j.error||"api");
     return j;
   }
+  async function apiUpload(path,formData){
+    const r=await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
+      method:"POST",body:formData
+    });
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.error||"upload");
+    return j;
+  }
 
+  // ── screens ──
+  function showScreen(id){
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+
+  // ══════════════════════════════
+  //  Screen 1
+  // ══════════════════════════════
   async function load(){
-    qs("list").innerHTML = `<div class="empty">Загрузка…</div>`;
+    qs("list").innerHTML=`<div class="empty">Загрузка…</div>`;
     try{
-      playlists = await apiGet("/api/playlists");
+      playlists=await apiGet("/api/playlists");
       renderPlaylists();
     }catch(e){
-      qs("list").innerHTML = `<div class="empty">Ошибка загрузки</div>`;
+      qs("list").innerHTML=`<div class="empty">Ошибка загрузки</div>`;
     }
   }
 
   function renderPlaylists(){
-    const list = qs("list");
-    const names = Object.keys(playlists);
-
+    const list=qs("list");
+    const names=Object.keys(playlists);
     if(!names.length){
-      list.innerHTML = `<div class="empty">Плейлисты не найдены</div>`;
+      list.innerHTML=`<div class="empty">Плейлисты не найдены</div>`;
       return;
     }
-
-    list.innerHTML = "";
+    list.innerHTML="";
     names.forEach(name=>{
-      const pl = playlists[name];
-      const tracks = pl.tracks||[];
-      const isOpen = openPl===name;
+      const pl=playlists[name];
+      const tracks=pl.tracks||[];
+      const isOpen=openPl===name;
 
-      // wrapper
-      const block = document.createElement("div");
-      block.className = "pl-block";
+      const block=document.createElement("div");
+      block.className="pl-block";
 
-      // row
-      const row = document.createElement("div");
-      row.className = "pl"+(isOpen?" active":"");
+      const row=document.createElement("div");
+      row.className="pl"+(isOpen?" active":"");
 
-      const cover = document.createElement("div");
-      cover.className = "pl-cover";
+      const cover=document.createElement("div");
+      cover.className="pl-cover";
       if(pl.cover_url){
-        const img = document.createElement("img");
-        img.src = pl.cover_url;
+        const img=document.createElement("img");img.src=pl.cover_url;
         cover.appendChild(img);
-      } else {
-        cover.textContent = "♪";
-      }
+      } else { cover.textContent="♪"; }
 
-      const info = document.createElement("div");
-      info.className = "pl-info";
-      info.innerHTML = `<div class="pl-name">${name}</div><div class="pl-count">${tracks.length} тр.</div>`;
+      const info=document.createElement("div");
+      info.className="pl-info";
+      info.innerHTML=`<div class="pl-name">${name}</div><div class="pl-count">${tracks.length} тр.</div>`;
 
-      const actions = document.createElement("div");
-      actions.className = "pl-actions";
+      const actions=document.createElement("div");
+      actions.className="pl-actions";
 
-      const btnEdit = document.createElement("div");
-      btnEdit.className = "pl-btn";
-      btnEdit.textContent = "✏️";
+      const btnEdit=document.createElement("div");
+      btnEdit.className="pl-btn";
+      btnEdit.textContent="✏️";
       btnEdit.addEventListener("click",(e)=>{
         e.stopPropagation();
-        alert("Редактирование — следующий шаг");
+        openEditScreen(name);
       });
 
-      const btnDel = document.createElement("div");
-      btnDel.className = "pl-btn";
-      btnDel.textContent = "🗑️";
+      const btnDel=document.createElement("div");
+      btnDel.className="pl-btn";
+      btnDel.textContent="🗑️";
       btnDel.addEventListener("click",async(e)=>{
         e.stopPropagation();
         if(confirm(`Удалить «${name}»?`)){
           await apiDelete(`/api/playlist/${encodeURIComponent(name)}`);
-          openPl = null;
+          openPl=null;
           await load();
         }
       });
 
       actions.appendChild(btnEdit);
       actions.appendChild(btnDel);
-
       row.appendChild(cover);
       row.appendChild(info);
       row.appendChild(actions);
 
       row.addEventListener("click",()=>{
-        if(openPl===name){ openPl=null; }
-        else { openPl=name; }
+        openPl=openPl===name?null:name;
         renderPlaylists();
       });
 
       block.appendChild(row);
 
-      // dropdown
-      const dd = document.createElement("div");
-      dd.className = "pl-dropdown"+(isOpen?" open":"");
-
+      const dd=document.createElement("div");
+      dd.className="pl-dropdown"+(isOpen?" open":"");
       if(isOpen){
         if(!tracks.length){
-          dd.innerHTML = `<div class="empty">Плейлист пустой</div>`;
+          dd.innerHTML=`<div class="empty">Плейлист пустой</div>`;
         } else {
           tracks.forEach((t,i)=>{
-            const trk = document.createElement("div");
-            trk.className = "trk";
-            trk.innerHTML = `
+            const trk=document.createElement("div");
+            trk.className="trk";
+            trk.innerHTML=`
               <div class="trk-num">${i+1}</div>
               <div class="trk-info">
                 <div class="trk-title">${t.title||"Track"}</div>
@@ -446,68 +513,262 @@
           });
         }
       }
-
       block.appendChild(dd);
       list.appendChild(block);
     });
   }
 
   function playTrack(t){
-    if(t.audio_url){
-      const a = new Audio(t.audio_url);
-      a.play().catch(()=>{});
-    }
+    if(t.audio_url){ new Audio(t.audio_url).play().catch(()=>{}); }
   }
 
   qs("header").addEventListener("click",()=>{
     if(openPl){ openPl=null; renderPlaylists(); }
   });
 
-  // ───── create playlist step 1 ─────
+  qs("btnCreate").addEventListener("click",()=>openCreateScreen());
 
-  function showCreateModal(){
-    openPl = null;
-    renderPlaylists();
-    qs("plErr").textContent = "";
-    qs("plName").value = "";
-    createCoverFile = null;
-    qs("coverImg").style.display = "none";
-    qs("coverPlus").style.display = "block";
-    qs("coverImg").src = "";
-    qs("mBack").classList.add("show");
-    qs("mCreate").classList.add("show");
-    setTimeout(()=>qs("plName").focus(),30);
+  // ══════════════════════════════
+  //  Screen 2 — Create / Edit
+  // ══════════════════════════════
+
+  function openCreateScreen(){
+    s2Mode    = "create";
+    s2PlName  = null;
+    s2Tracks  = [];
+    s2Cover   = null;
+    qs("s2Title").textContent    = "Новый плейлист";
+    qs("s2Save").textContent     = "Создать";
+    qs("s2NameInput").value      = "";
+    qs("s2Err").textContent      = "";
+    qs("s2CoverImg").style.display = "none";
+    qs("s2CoverPlus").style.display = "block";
+    qs("s2CoverImg").src         = "";
+    renderS2Tracks();
+    showScreen("s2");
   }
 
-  function hideCreateModal(){
-    qs("mBack").classList.remove("show");
-    qs("mCreate").classList.remove("show");
+  function openEditScreen(name){
+    s2Mode   = "edit";
+    s2PlName = name;
+    const pl = playlists[name];
+    s2Tracks = (pl.tracks||[]).map(t=>({...t}));
+    s2Cover  = null;
+    qs("s2Title").textContent = "Редактировать";
+    qs("s2Save").textContent  = "Сохранить";
+    qs("s2NameInput").value   = name;
+    qs("s2Err").textContent   = "";
+
+    if(pl.cover_url){
+      qs("s2CoverImg").src = pl.cover_url;
+      qs("s2CoverImg").style.display = "block";
+      qs("s2CoverPlus").style.display = "none";
+    } else {
+      qs("s2CoverImg").style.display = "none";
+      qs("s2CoverPlus").style.display = "block";
+    }
+    renderS2Tracks();
+    showScreen("s2");
   }
 
-  qs("btnCreate").addEventListener("click",showCreateModal);
-  qs("mBack").addEventListener("click",hideCreateModal);
-  qs("plCancel").addEventListener("click",hideCreateModal);
+  function renderS2Tracks(){
+    const box = qs("s2TracksList");
+    box.innerHTML = "";
 
-  qs("coverPick").addEventListener("click",()=>{ qs("coverFile").click(); });
+    // existing tracks
+    s2Tracks.forEach((t,i)=>{
+      const div=document.createElement("div");
+      div.className="s2-trk";
 
-  qs("coverFile").addEventListener("change",(e)=>{
-    const f = e.target.files&&e.target.files[0];
-    if(!f) return;
-    createCoverFile = f;
-    qs("coverImg").src = URL.createObjectURL(f);
-    qs("coverImg").style.display = "block";
-    qs("coverPlus").style.display = "none";
+      const cvr=document.createElement("div");
+      cvr.className="s2-trk-cover";
+      if(t.thumb_url){
+        const img=document.createElement("img");img.src=t.thumb_url;cvr.appendChild(img);
+      } else { cvr.textContent="♪"; }
+
+      const info=document.createElement("div");
+      info.className="s2-trk-info";
+      info.innerHTML=`<div class="s2-trk-title">${t.title||"Track"}</div><div class="s2-trk-artist">${t.artist||""}</div>`;
+
+      div.appendChild(cvr);
+      div.appendChild(info);
+
+      // long press → delete confirm
+      div.addEventListener("pointerdown",()=>{
+        longTimer=setTimeout(()=>showDelConfirm(i,t.title),600);
+      });
+      div.addEventListener("pointerup",()=>clearTimeout(longTimer));
+      div.addEventListener("pointerleave",()=>clearTimeout(longTimer));
+
+      box.appendChild(div);
+    });
+
+    // + add track button
+    const addBtn=document.createElement("div");
+    addBtn.className="s2-add-btn";
+    addBtn.innerHTML=`
+      <div class="s2-add-icon">+</div>
+      <div style="font-size:14px">Добавить трек</div>
+    `;
+    addBtn.addEventListener("click",()=>qs("s2FileInput").click());
+    box.appendChild(addBtn);
+  }
+
+  function showDelConfirm(index, title){
+    s2DelIndex=index;
+    qs("confirmDelText").textContent=`Удалить «${title||"трек"}»?`;
+    qs("confirmDel").classList.add("show");
+  }
+  function hideDelConfirm(){
+    qs("confirmDel").classList.remove("show");
+    s2DelIndex=null;
+  }
+
+  qs("confirmDelNo").addEventListener("click",hideDelConfirm);
+  qs("confirmDelYes").addEventListener("click",()=>{
+    if(s2DelIndex!==null){
+      s2Tracks.splice(s2DelIndex,1);
+      renderS2Tracks();
+    }
+    hideDelConfirm();
   });
 
-  qs("plNext").addEventListener("click",async()=>{
-    const name = qs("plName").value.trim();
-    if(!name){ qs("plErr").textContent = "Название обязательно"; return; }
+  // cover pick
+  qs("s2CoverPick").addEventListener("click",()=>qs("s1CoverFile").click());
+  qs("s1CoverFile").addEventListener("change",(e)=>{
+    const f=e.target.files&&e.target.files[0];
+    if(!f) return;
+    s2Cover=f;
+    qs("s2CoverImg").src=URL.createObjectURL(f);
+    qs("s2CoverImg").style.display="block";
+    qs("s2CoverPlus").style.display="none";
+  });
+
+  // add track from file
+  qs("s2FileInput").addEventListener("change",async(e)=>{
+    const files=Array.from(e.target.files||[]);
+    if(!files.length) return;
+
+    for(const f of files){
+      const fd=new FormData();
+      fd.append("file",f);
+      try{
+        await apiUpload("/api/upload/audio",fd);
+      }catch(err){
+        console.warn("upload error",err);
+      }
+    }
+
+    // подтягиваем pending
+    await loadPendingIntoS2();
+    e.target.value="";
+  });
+
+  async function loadPendingIntoS2(){
     try{
-      await apiPost("/api/playlist",{name});
-      hideCreateModal();
+      const res=await apiGet("/api/pending");
+      const tracks=res.tracks||[];
+      tracks.forEach(t=>{
+        // не дублируем
+        if(!s2Tracks.find(x=>x.file_id===t.file_id)){
+          s2Tracks.push(t);
+        }
+      });
+      renderS2Tracks();
+    }catch(e){}
+  }
+
+  // import from bot (pending)
+  qs("s2ImportBtn").addEventListener("click",async()=>{
+    try{
+      const res=await apiGet("/api/pending");
+      const tracks=res.tracks||[];
+      const box=qs("importList");
+
+      if(!tracks.length){
+        box.innerHTML=`<div class="empty">Нет треков.<br>Отправь аудио боту, затем нажми /ready</div>`;
+      } else {
+        box.innerHTML="";
+        tracks.forEach(t=>{
+          const div=document.createElement("div");
+          div.style.cssText="padding:8px 0;border-bottom:1px solid var(--line);font-size:14px";
+          div.innerHTML=`<b>${t.title||"Track"}</b><br><span style="color:var(--muted);font-size:12px">${t.artist||""}</span>`;
+          box.appendChild(div);
+        });
+      }
+
+      qs("importBack").classList.add("show");
+      qs("importModal").classList.add("show");
+    }catch(e){}
+  });
+
+  qs("importCancel").addEventListener("click",()=>{
+    qs("importBack").classList.remove("show");
+    qs("importModal").classList.remove("show");
+  });
+  qs("importBack").addEventListener("click",()=>{
+    qs("importBack").classList.remove("show");
+    qs("importModal").classList.remove("show");
+  });
+
+  qs("importApply").addEventListener("click",async()=>{
+    await loadPendingIntoS2();
+    qs("importBack").classList.remove("show");
+    qs("importModal").classList.remove("show");
+  });
+
+  // back
+  qs("s2Back").addEventListener("click",()=>{
+    showScreen("s1");
+    load();
+  });
+  qs("s2Cancel").addEventListener("click",()=>{
+    showScreen("s1");
+    load();
+  });
+
+  // save / create
+  qs("s2Save").addEventListener("click",async()=>{
+    const newName=qs("s2NameInput").value.trim();
+    if(!newName){
+      qs("s2Err").textContent="Название обязательно";
+      return;
+    }
+
+    try{
+      if(s2Mode==="create"){
+        // создаём плейлист
+        await apiPost("/api/playlist",{name:newName});
+      } else {
+        // переименовываем если имя изменилось
+        if(newName!==s2PlName){
+          await apiPost(`/api/playlist/${encodeURIComponent(s2PlName)}/rename`,{new_name:newName});
+          s2PlName=newName;
+        }
+      }
+
+      // применяем pending треки (если есть)
+      const pending=await apiGet("/api/pending");
+      if((pending.tracks||[]).length){
+        await apiPost("/api/pending/apply",{playlist:newName});
+      }
+
+      // добавляем все s2Tracks которых ещё нет в плейлисте
+      const currentPl=await apiGet("/api/playlists");
+      const existing=(currentPl[newName]&&currentPl[newName].tracks)||[];
+      const existingIds=new Set(existing.map(t=>t.file_id));
+
+      for(const t of s2Tracks){
+        if(!existingIds.has(t.file_id)){
+          // добавляем трек напрямую через API
+          await apiPost(`/api/playlist/${encodeURIComponent(newName)}/add_track`,{track:t});
+        }
+      }
+
+      showScreen("s1");
       await load();
     }catch(e){
-      qs("plErr").textContent = "Плейлист уже существует";
+      qs("s2Err").textContent=e.message||"Ошибка сохранения";
     }
   });
 
