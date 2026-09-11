@@ -249,7 +249,7 @@
 <div class="screen active" id="s1">
   <div class="tabs">
     <div class="tab active" id="tabPlaylists" onclick="switchTab('playlists')">Плейлисты</div>
-    <div class="tab" id="tabCatalog" onclick="switchTab('catalog')">Каталог</div>
+    <div class="tab" id="tabCatalog" onclick="switchTab('catalog')">Все треки</div>
   </div>
 
   <!-- вкладка Плейлисты -->
@@ -258,7 +258,7 @@
     <div class="fixed-btn" id="btnCreate">+ Создать плейлист</div>
   </div>
 
-  <!-- вкладка Каталог -->
+  <!-- вкладка Все треки -->
   <div id="panelCatalog" style="flex:1;display:none;flex-direction:column;overflow:hidden">
     <div class="wrap" id="catalogList"></div>
     <div class="fixed-btn" id="btnLoadTracks">Загрузить треки</div>
@@ -297,7 +297,7 @@
 </div>
 
 <!-- ════════════════════════════
-  Screen 3: Каталог в режиме выбора треков
+  Screen 3: Все треки в режиме выбора треков
 ════════════════════════════ -->
 <div class="screen" id="s3">
   <div class="header">
@@ -487,7 +487,7 @@
   }
 
   // ══════════════════════════════
-  //  Каталог
+  //  Все треки
   // ══════════════════════════════
   async function loadCatalog(){
     qs("catalogList").innerHTML=`<div class="empty">Загрузка…</div>`;
@@ -522,7 +522,7 @@
     });
   }
 
-  // Загрузить треки из бота в каталог
+  // Загрузить треки из бота в Каталог
   qs("btnLoadTracks").onclick=async()=>{
     qs("btnLoadTracks").textContent="Загрузка…";
     const res=await apiPost("/api/catalog/load",{});
@@ -601,7 +601,7 @@
       box.appendChild(div);
     });
 
-    // кнопка добавить трек → открыть каталог
+    // кнопка добавить трек → открыть Все треки
     const addBtn=document.createElement("div");
     addBtn.className="s2-add-btn";
     addBtn.innerHTML=`<div class="s2-add-icon">+</div><div style="font-size:14px">Добавить трек</div>`;
@@ -664,7 +664,7 @@
   };
 
   // ══════════════════════════════
-  //  Screen 3 — Каталог (выбор)
+  //  Screen 3 — Все треки (выбор)
   // ══════════════════════════════
   function openCatalogSelect(){
     s3Selected=new Set(s2Tracks.map(t=>t.file_id));
@@ -675,7 +675,7 @@
   function renderS3(){
     const box=qs("s3List");
     if(!catalog.length){
-      box.innerHTML=`<div class="empty">Каталог пуст.<br><br>Сначала загрузите треки через вкладку «Каталог».</div>`;
+      box.innerHTML=`<div class="empty">Каталог пуст.<br><br>Сначала загрузите треки через вкладку «Все треки».</div>`;
       return;
     }
     box.innerHTML="";
