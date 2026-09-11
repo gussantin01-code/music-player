@@ -130,14 +130,14 @@
     .modal.show{transform:translateY(-50%);opacity:1;pointer-events:auto}
     .modal-title{font-weight:750;margin-bottom:12px;text-align:center}
 
-    /* dashed cover — long rare dashes via SVG */
+    /* dashed cover — ровный пунктир */
     .cover-pick{
       width:110px;height:110px;border-radius:18px;
       border:none;
       margin:0 auto 14px;
       display:flex;align-items:center;justify-content:center;
       color:#999;user-select:none;cursor:pointer;overflow:hidden;
-      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='18' ry='18' stroke='%23999999' stroke-width='2' stroke-dasharray='16%2c 10' stroke-linecap='round'/%3e%3c/svg%3e");
+      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='18' ry='18' stroke='%23999999' stroke-width='2' stroke-dasharray='12%2c 8'/%3e%3c/svg%3e");
     }
     .cover-pick img{width:100%;height:100%;object-fit:cover;border-radius:18px}
     .cover-plus{font-size:34px;line-height:1}
@@ -171,7 +171,7 @@
       border:none;
       display:flex;align-items:center;justify-content:center;
       color:#999;cursor:pointer;overflow:hidden;flex:0 0 100px;
-      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23999999' stroke-width='2' stroke-dasharray='16%2c 10' stroke-linecap='round'/%3e%3c/svg%3e");
+      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23999999' stroke-width='2' stroke-dasharray='12%2c 8'/%3e%3c/svg%3e");
     }
     .s2-cover-pick.has-img{background-image:none}
     .s2-cover-pick img{width:100%;height:100%;object-fit:cover;border-radius:16px}
@@ -189,7 +189,7 @@
     .s2-desc{
       width:100%;height:50px;border-radius:12px;
       border:1px solid var(--line);background:#121213;
-      color:var(--text);padding:8px 12px;outline:none;
+      padding:8px 12px;outline:none;
       font-size:13px;font-family:inherit;resize:none;
       color:var(--muted);
     }
@@ -223,7 +223,7 @@
       width:42px;height:42px;border-radius:10px;
       display:flex;align-items:center;justify-content:center;
       font-size:22px;flex:0 0 42px;
-      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='10' ry='10' stroke='%23555555' stroke-width='2' stroke-dasharray='14%2c 8' stroke-linecap='round'/%3e%3c/svg%3e");
+      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='10' ry='10' stroke='%23555555' stroke-width='2' stroke-dasharray='12%2c 8'/%3e%3c/svg%3e");
     }
 
     .s2-bottom{
@@ -253,10 +253,7 @@
     .confirm-del-btns{display:flex;gap:10px}
 
     /* import choice modal */
-    .import-choice{
-      display:flex;flex-direction:column;gap:10px;
-      margin-bottom:14px;
-    }
+    .import-choice{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
     .import-opt{
       height:52px;border-radius:14px;
       background:var(--btn);border:1px solid var(--line);
@@ -269,20 +266,12 @@
 </head>
 <body>
 
-<!-- ════════════════════════
-     Screen 1: Плейлисты
-════════════════════════ -->
 <div class="screen active" id="s1">
-  <div class="header" id="header">
-    <div class="title">ПЛЕЙЛИСТЫ</div>
-  </div>
+  <div class="header" id="header"><div class="title">ПЛЕЙЛИСТЫ</div></div>
   <div class="wrap" id="list"></div>
   <div class="create" id="btnCreate">+ Создать плейлист</div>
 </div>
 
-<!-- ════════════════════════
-     Screen 2: Создать / Редактировать
-════════════════════════ -->
 <div class="screen" id="s2">
   <div class="header">
     <span class="back" id="s2Back">‹</span>
@@ -296,7 +285,7 @@
     </div>
     <div class="s2-top-info">
       <input type="text" class="s2-input" id="s2NameInput" placeholder="Название плейлиста" />
-      <textarea class="s2-desc" id="s2DescInput" placeholder="Описание"></textarea>
+      <textarea class="s2-desc" id="s2DescInput" placeholder="Описание (необязательно)"></textarea>
       <div class="err" id="s2Err"></div>
     </div>
   </div>
@@ -313,9 +302,8 @@
 </div>
 
 <input id="s2FileInput" type="file" accept="audio/*" style="display:none" multiple />
-<input id="s1CoverFile" type="file" accept="image/*" style="display:none" />
+<input id="s2CoverFile" type="file" accept="image/*" style="display:none" />
 
-<!-- long press confirm -->
 <div class="confirm-del" id="confirmDel">
   <div class="confirm-del-text" id="confirmDelText">Удалить трек?</div>
   <div class="confirm-del-btns">
@@ -324,7 +312,6 @@
   </div>
 </div>
 
-<!-- import choice modal -->
 <div class="modal-backdrop" id="importChoiceBack"></div>
 <div class="modal" id="importChoiceModal">
   <div class="modal-title">Импортировать треки</div>
@@ -335,7 +322,6 @@
   <button class="btn" id="importChoiceCancel" style="width:100%">Отмена</button>
 </div>
 
-<!-- import from bot: pending list -->
 <div class="modal-backdrop" id="importBotBack"></div>
 <div class="modal" id="importBotModal">
   <div class="modal-title">Треки из бота</div>
@@ -346,13 +332,12 @@
   </div>
 </div>
 
-<!-- import from group: placeholder -->
 <div class="modal-backdrop" id="importGroupBack"></div>
 <div class="modal" id="importGroupModal">
   <div class="modal-title">Импорт из группы</div>
   <div class="empty">
-    Добавьте бота в нужную группу или канал.<br><br>
-    После этого бот просканирует все аудиофайлы и добавит их в плейлист.
+    Этот пункт сделаем через бота: добавляешь бота в группу/канал.<br><br>
+    Потом бот сможет собрать все аудиофайлы оттуда.
   </div>
   <button class="btn" id="importGroupClose" style="width:100%;margin-top:14px">Понятно</button>
 </div>
@@ -409,22 +394,15 @@
     document.getElementById(id).classList.add("active");
   }
 
-  // ══════════════════════════════
-  //  Screen 1
-  // ══════════════════════════════
   async function load(){
     qs("list").innerHTML=`<div class="empty">Загрузка…</div>`;
-    try{
-      playlists=await apiGet("/api/playlists");
-      renderPlaylists();
-    }catch(e){
-      qs("list").innerHTML=`<div class="empty">Ошибка загрузки</div>`;
-    }
+    playlists = await apiGet("/api/playlists");
+    renderPlaylists();
   }
 
   function renderPlaylists(){
     const list=qs("list");
-    const names=Object.keys(playlists);
+    const names=Object.keys(playlists||{});
     if(!names.length){
       list.innerHTML=`<div class="empty">Плейлисты не найдены</div>`;
       return;
@@ -458,33 +436,31 @@
       const btnEdit=document.createElement("div");
       btnEdit.className="pl-btn";
       btnEdit.textContent="✏️";
-      btnEdit.addEventListener("click",(e)=>{
-        e.stopPropagation();
-        openEditScreen(name);
-      });
+      btnEdit.onclick=(e)=>{ e.stopPropagation(); openEditScreen(name); };
 
       const btnDel=document.createElement("div");
       btnDel.className="pl-btn";
       btnDel.textContent="🗑️";
-      btnDel.addEventListener("click",async(e)=>{
+      btnDel.onclick=async(e)=>{
         e.stopPropagation();
         if(confirm(`Удалить «${name}»?`)){
           await apiDelete(`/api/playlist/${encodeURIComponent(name)}`);
           openPl=null;
           await load();
         }
-      });
+      };
 
       actions.appendChild(btnEdit);
       actions.appendChild(btnDel);
+
       row.appendChild(cover);
       row.appendChild(info);
       row.appendChild(actions);
 
-      row.addEventListener("click",()=>{
+      row.onclick=()=>{
         openPl=openPl===name?null:name;
         renderPlaylists();
-      });
+      };
 
       block.appendChild(row);
 
@@ -505,10 +481,10 @@
               </div>
               <div class="trk-dur">${fmt(t.duration)}</div>
             `;
-            trk.addEventListener("click",(e)=>{
+            trk.onclick=(e)=>{
               e.stopPropagation();
-              playTrack(t);
-            });
+              if(t.audio_url){ new Audio(t.audio_url).play().catch(()=>{}); }
+            };
             dd.appendChild(trk);
           });
         }
@@ -518,24 +494,13 @@
     });
   }
 
-  function playTrack(t){
-    if(t.audio_url){ new Audio(t.audio_url).play().catch(()=>{}); }
-  }
-
-  qs("header").addEventListener("click",()=>{
+  qs("header").onclick=()=>{
     if(openPl){ openPl=null; renderPlaylists(); }
-  });
+  };
 
-  qs("btnCreate").addEventListener("click",()=>openCreateScreen());
-
-  // ══════════════════════════════
-  //  Screen 2 — Create / Edit
-  // ══════════════════════════════
+  // ── step 2 ──
   function openCreateScreen(){
-    s2Mode="create";
-    s2PlName=null;
-    s2Tracks=[];
-    s2Cover=null;
+    s2Mode="create"; s2PlName=null; s2Tracks=[]; s2Cover=null;
     qs("s2Title").textContent="Новый плейлист";
     qs("s2Save").textContent="Создать";
     qs("s2NameInput").value="";
@@ -543,15 +508,13 @@
     qs("s2Err").textContent="";
     qs("s2CoverImg").style.display="none";
     qs("s2CoverPlus").style.display="block";
-    qs("s2CoverImg").src="";
     qs("s2CoverPick").classList.remove("has-img");
     renderS2Tracks();
     showScreen("s2");
   }
 
   function openEditScreen(name){
-    s2Mode="edit";
-    s2PlName=name;
+    s2Mode="edit"; s2PlName=name;
     const pl=playlists[name];
     s2Tracks=(pl.tracks||[]).map(t=>({...t}));
     s2Cover=null;
@@ -560,7 +523,6 @@
     qs("s2NameInput").value=name;
     qs("s2DescInput").value="";
     qs("s2Err").textContent="";
-
     if(pl.cover_url){
       qs("s2CoverImg").src=pl.cover_url;
       qs("s2CoverImg").style.display="block";
@@ -578,10 +540,12 @@
   function renderS2Tracks(){
     const box=qs("s2TracksList");
     box.innerHTML="";
-
     s2Tracks.forEach((t,i)=>{
       const div=document.createElement("div");
       div.className="s2-trk";
+      div.onpointerdown=()=>{ longTimer=setTimeout(()=>showDelConfirm(i,t.title),600); };
+      div.onpointerup=()=>clearTimeout(longTimer);
+      div.onpointerleave=()=>clearTimeout(longTimer);
 
       const cvr=document.createElement("div");
       cvr.className="s2-trk-cover";
@@ -592,51 +556,32 @@
       const info=document.createElement("div");
       info.className="s2-trk-info";
       info.innerHTML=`<div class="s2-trk-title">${t.title||"Track"}</div><div class="s2-trk-artist">${t.artist||""}</div>`;
-
       div.appendChild(cvr);
       div.appendChild(info);
-
-      div.addEventListener("pointerdown",()=>{
-        longTimer=setTimeout(()=>showDelConfirm(i,t.title),600);
-      });
-      div.addEventListener("pointerup",()=>clearTimeout(longTimer));
-      div.addEventListener("pointerleave",()=>clearTimeout(longTimer));
-
       box.appendChild(div);
     });
 
     const addBtn=document.createElement("div");
     addBtn.className="s2-add-btn";
-    addBtn.innerHTML=`
-      <div class="s2-add-icon">+</div>
-      <div style="font-size:14px">Добавить трек</div>
-    `;
-    addBtn.addEventListener("click",()=>qs("s2FileInput").click());
+    addBtn.innerHTML=`<div class="s2-add-icon">+</div><div style="font-size:14px">Добавить трек</div>`;
+    addBtn.onclick=()=>qs("s2FileInput").click();
     box.appendChild(addBtn);
   }
 
-  // ── delete confirm ──
   function showDelConfirm(index,title){
     s2DelIndex=index;
     qs("confirmDelText").textContent=`Удалить «${title||"трек"}»?`;
     qs("confirmDel").classList.add("show");
   }
-  function hideDelConfirm(){
-    qs("confirmDel").classList.remove("show");
-    s2DelIndex=null;
-  }
-  qs("confirmDelNo").addEventListener("click",hideDelConfirm);
-  qs("confirmDelYes").addEventListener("click",()=>{
-    if(s2DelIndex!==null){
-      s2Tracks.splice(s2DelIndex,1);
-      renderS2Tracks();
-    }
+  function hideDelConfirm(){ qs("confirmDel").classList.remove("show"); s2DelIndex=null; }
+  qs("confirmDelNo").onclick=hideDelConfirm;
+  qs("confirmDelYes").onclick=()=>{
+    if(s2DelIndex!==null){ s2Tracks.splice(s2DelIndex,1); renderS2Tracks(); }
     hideDelConfirm();
-  });
+  };
 
-  // ── cover pick ──
-  qs("s2CoverPick").addEventListener("click",()=>qs("s1CoverFile").click());
-  qs("s1CoverFile").addEventListener("change",(e)=>{
+  qs("s2CoverPick").onclick=()=>qs("s2CoverFile").click();
+  qs("s2CoverFile").onchange=(e)=>{
     const f=e.target.files&&e.target.files[0];
     if(!f) return;
     s2Cover=f;
@@ -644,35 +589,29 @@
     qs("s2CoverImg").style.display="block";
     qs("s2CoverPlus").style.display="none";
     qs("s2CoverPick").classList.add("has-img");
-  });
+  };
 
-  // ── add track from file ──
-  qs("s2FileInput").addEventListener("change",async(e)=>{
+  qs("s2FileInput").onchange=async(e)=>{
     const files=Array.from(e.target.files||[]);
     if(!files.length) return;
     for(const f of files){
       const fd=new FormData();
       fd.append("file",f);
-      try{ await apiUpload("/api/upload/audio",fd); }catch(err){}
+      await apiUpload("/api/upload/audio",fd);
     }
     await loadPendingIntoS2();
     e.target.value="";
-  });
+  };
 
   async function loadPendingIntoS2(){
-    try{
-      const res=await apiGet("/api/pending");
-      const tracks=res.tracks||[];
-      tracks.forEach(t=>{
-        if(!s2Tracks.find(x=>x.file_id===t.file_id)){
-          s2Tracks.push(t);
-        }
-      });
-      renderS2Tracks();
-    }catch(e){}
+    const res=await apiGet("/api/pending");
+    const tracks=res.tracks||[];
+    tracks.forEach(t=>{
+      if(!s2Tracks.find(x=>x.file_id===t.file_id)){ s2Tracks.push(t); }
+    });
+    renderS2Tracks();
   }
 
-  // ── import choice modal ──
   function showModal(backId,modalId){
     qs(backId).classList.add("show");
     qs(modalId).classList.add("show");
@@ -682,101 +621,77 @@
     qs(modalId).classList.remove("show");
   }
 
-  qs("s2ImportBtn").addEventListener("click",()=>{
-    showModal("importChoiceBack","importChoiceModal");
-  });
-  qs("importChoiceCancel").addEventListener("click",()=>{
-    hideModal("importChoiceBack","importChoiceModal");
-  });
-  qs("importChoiceBack").addEventListener("click",()=>{
-    hideModal("importChoiceBack","importChoiceModal");
-  });
+  qs("s2ImportBtn").onclick=()=>showModal("importChoiceBack","importChoiceModal");
+  qs("importChoiceCancel").onclick=()=>hideModal("importChoiceBack","importChoiceModal");
+  qs("importChoiceBack").onclick=()=>hideModal("importChoiceBack","importChoiceModal");
 
-  // ── import from bot ──
-  qs("importFromBot").addEventListener("click",async()=>{
+  qs("importFromBot").onclick=async()=>{
     hideModal("importChoiceBack","importChoiceModal");
-    try{
-      const res=await apiGet("/api/pending");
-      const tracks=res.tracks||[];
-      const box=qs("importBotList");
-      if(!tracks.length){
-        box.innerHTML=`<div class="empty">Нет треков.<br><br>Отправьте аудио боту, затем вернитесь сюда.</div>`;
-      } else {
-        box.innerHTML="";
-        tracks.forEach(t=>{
-          const div=document.createElement("div");
-          div.style.cssText="padding:8px 0;border-bottom:1px solid var(--line);font-size:14px";
-          div.innerHTML=`<b>${t.title||"Track"}</b><br><span style="color:var(--muted);font-size:12px">${t.artist||""}</span>`;
-          box.appendChild(div);
-        });
-      }
-      showModal("importBotBack","importBotModal");
-    }catch(e){}
-  });
+    const res=await apiGet("/api/pending");
+    const tracks=res.tracks||[];
+    const box=qs("importBotList");
+    if(!tracks.length){
+      box.innerHTML=`<div class="empty">Нет треков.<br><br>Отправьте аудио боту.</div>`;
+    } else {
+      box.innerHTML="";
+      tracks.forEach(t=>{
+        const div=document.createElement("div");
+        div.style.cssText="padding:8px 0;border-bottom:1px solid var(--line);font-size:14px";
+        div.innerHTML=`<b>${t.title||"Track"}</b><br><span style="color:var(--muted);font-size:12px">${t.artist||""}</span>`;
+        box.appendChild(div);
+      });
+    }
+    showModal("importBotBack","importBotModal");
+  };
 
-  qs("importBotClose").addEventListener("click",()=>{
-    hideModal("importBotBack","importBotModal");
-  });
-  qs("importBotBack").addEventListener("click",()=>{
-    hideModal("importBotBack","importBotModal");
-  });
-  qs("importBotApply").addEventListener("click",async()=>{
+  qs("importBotClose").onclick=()=>hideModal("importBotBack","importBotModal");
+  qs("importBotBack").onclick=()=>hideModal("importBotBack","importBotModal");
+  qs("importBotApply").onclick=async()=>{
     await loadPendingIntoS2();
-    // очищаем pending на сервере (подготовка, окончательная очистка при сохранении)
     hideModal("importBotBack","importBotModal");
-  });
+  };
 
-  // ── import from group ──
-  qs("importFromGroup").addEventListener("click",()=>{
+  qs("importFromGroup").onclick=()=>{
     hideModal("importChoiceBack","importChoiceModal");
     showModal("importGroupBack","importGroupModal");
-  });
-  qs("importGroupClose").addEventListener("click",()=>{
-    hideModal("importGroupBack","importGroupModal");
-  });
-  qs("importGroupBack").addEventListener("click",()=>{
-    hideModal("importGroupBack","importGroupModal");
-  });
+  };
+  qs("importGroupClose").onclick=()=>hideModal("importGroupBack","importGroupModal");
+  qs("importGroupBack").onclick=()=>hideModal("importGroupBack","importGroupModal");
 
-  // ── back / cancel ──
-  qs("s2Back").addEventListener("click",()=>{ showScreen("s1"); load(); });
-  qs("s2Cancel").addEventListener("click",()=>{ showScreen("s1"); load(); });
+  qs("s2Back").onclick=()=>{ showScreen("s1"); load(); };
+  qs("s2Cancel").onclick=()=>{ showScreen("s1"); load(); };
 
-  // ── save / create ──
-  qs("s2Save").addEventListener("click",async()=>{
+  qs("s2Save").onclick=async()=>{
     const newName=qs("s2NameInput").value.trim();
     if(!newName){ qs("s2Err").textContent="Название обязательно"; return; }
 
-    try{
-      if(s2Mode==="create"){
-        await apiPost("/api/playlist",{name:newName});
-      } else if(newName!==s2PlName){
-        await apiPost(`/api/playlist/${encodeURIComponent(s2PlName)}/rename`,{new_name:newName});
-      }
-
-      // apply pending
-      const pending=await apiGet("/api/pending");
-      if((pending.tracks||[]).length){
-        await apiPost("/api/pending/apply",{playlist:newName});
-      }
-
-      // add tracks that are not yet in playlist
-      const current=await apiGet("/api/playlists");
-      const existing=(current[newName]&&current[newName].tracks)||[];
-      const existingIds=new Set(existing.map(t=>t.file_id));
-
-      for(const t of s2Tracks){
-        if(!existingIds.has(t.file_id)){
-          await apiPost(`/api/playlist/${encodeURIComponent(newName)}/add_track`,{track:t});
-        }
-      }
-
-      showScreen("s1");
-      await load();
-    }catch(e){
-      qs("s2Err").textContent=e.message||"Ошибка сохранения";
+    if(s2Mode==="create"){
+      const r=await apiPost("/api/playlist",{name:newName});
+      if(!r.ok && r.error){ qs("s2Err").textContent=r.error; return; }
+    } else if(newName!==s2PlName){
+      await apiPost(`/api/playlist/${encodeURIComponent(s2PlName)}/rename`,{new_name:newName});
     }
-  });
+
+    const pending=await apiGet("/api/pending");
+    if((pending.tracks||[]).length){
+      await apiPost("/api/pending/apply",{playlist:newName});
+    }
+
+    const current=await apiGet("/api/playlists");
+    const existing=(current[newName]&&current[newName].tracks)||[];
+    const existingIds=new Set(existing.map(t=>t.file_id));
+
+    for(const t of s2Tracks){
+      if(!existingIds.has(t.file_id)){
+        await apiPost(`/api/playlist/${encodeURIComponent(newName)}/add_track`,{track:t});
+      }
+    }
+
+    showScreen("s1");
+    await load();
+  };
+
+  qs("btnCreate").onclick=openCreateScreen;
 
   load();
 </script>
