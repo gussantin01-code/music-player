@@ -26,52 +26,33 @@
       overflow:hidden;
     }
 
-    /* ── screens ── */
     .screen{display:none;flex-direction:column;height:100vh}
     .screen.active{display:flex}
 
     .header{
-      height:56px;
-      flex:0 0 56px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      letter-spacing:1px;
-      text-transform:uppercase;
+      height:56px;flex:0 0 56px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;letter-spacing:1px;text-transform:uppercase;
       border-bottom:1px solid var(--line);
-      user-select:none;
-      cursor:pointer;
-      position:relative;
+      user-select:none;cursor:pointer;position:relative;
     }
     .header .back{
-      position:absolute;
-      left:14px;
-      font-size:20px;
-      color:var(--muted);
-      cursor:pointer;
-      padding:8px;
+      position:absolute;left:14px;font-size:22px;
+      color:var(--muted);cursor:pointer;padding:8px;
     }
     .header .title{font-size:14px}
 
     .wrap{
-      flex:1;
-      overflow:auto;
-      padding:14px 14px 90px;
+      flex:1;overflow:auto;padding:14px 14px 90px;
     }
 
-    /* playlists */
+    /* playlist row */
     .pl-block{margin-bottom:10px}
     .pl{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:10px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      user-select:none;
-      cursor:pointer;
+      background:var(--card);border:1px solid var(--line);
+      border-radius:14px;padding:10px;
+      display:flex;align-items:center;gap:10px;
+      user-select:none;cursor:pointer;
     }
     .pl.active{
       border-bottom-left-radius:0;
@@ -99,15 +80,11 @@
     .pl-btn:active{opacity:.8}
 
     .pl-dropdown{
-      display:none;
-      background:var(--inner);
-      border:1px solid var(--line);
-      border-top:none;
+      display:none;background:var(--inner);
+      border:1px solid var(--line);border-top:none;
       border-bottom-left-radius:14px;
       border-bottom-right-radius:14px;
-      padding:6px 6px 10px;
-      max-height:45vh;
-      overflow:auto;
+      padding:6px 6px 10px;max-height:45vh;overflow:auto;
     }
     .pl-dropdown.open{display:block}
 
@@ -136,7 +113,7 @@
       user-select:none;cursor:pointer;z-index:10;
     }
 
-    /* ── modal ── */
+    /* ── modals ── */
     .modal-backdrop{
       position:fixed;inset:0;background:rgba(0,0,0,.55);
       opacity:0;pointer-events:none;transition:opacity .16s;z-index:80;
@@ -153,21 +130,29 @@
     .modal.show{transform:translateY(-50%);opacity:1;pointer-events:auto}
     .modal-title{font-weight:750;margin-bottom:12px;text-align:center}
 
+    /* dashed cover — long rare dashes via SVG */
     .cover-pick{
       width:110px;height:110px;border-radius:18px;
-      border:2px dashed #999;margin:0 auto 14px;
+      border:none;
+      margin:0 auto 14px;
       display:flex;align-items:center;justify-content:center;
       color:#999;user-select:none;cursor:pointer;overflow:hidden;
+      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='18' ry='18' stroke='%23999999' stroke-width='2' stroke-dasharray='16%2c 10' stroke-linecap='round'/%3e%3c/svg%3e");
     }
-    .cover-pick img{width:100%;height:100%;object-fit:cover}
+    .cover-pick img{width:100%;height:100%;object-fit:cover;border-radius:18px}
     .cover-plus{font-size:34px;line-height:1}
 
     .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
     .label{font-size:12px;color:var(--muted)}
-    input[type="text"]{
-      height:46px;border-radius:14px;
+    input[type="text"],textarea{
+      border-radius:14px;
       border:1px solid var(--line);background:#121213;
       color:var(--text);padding:0 12px;outline:none;font-size:15px;
+    }
+    input[type="text"]{height:46px}
+    textarea{
+      padding:10px 12px;resize:none;height:60px;
+      font-family:inherit;font-size:14px;
     }
     .row-btns{display:flex;gap:10px}
     .btn{
@@ -180,36 +165,42 @@
     .btn.danger{border-color:#3a2a2a;color:var(--danger)}
     .err{color:var(--danger);font-size:12px;text-align:center;min-height:16px;margin-top:2px}
 
-    /* ── step 2 screen ── */
+    /* ── step 2 ── */
     .s2-cover-pick{
       width:100px;height:100px;border-radius:16px;
-      border:2px dashed #999;
+      border:none;
       display:flex;align-items:center;justify-content:center;
       color:#999;cursor:pointer;overflow:hidden;flex:0 0 100px;
+      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23999999' stroke-width='2' stroke-dasharray='16%2c 10' stroke-linecap='round'/%3e%3c/svg%3e");
     }
-    .s2-cover-pick img{width:100%;height:100%;object-fit:cover}
+    .s2-cover-pick.has-img{background-image:none}
+    .s2-cover-pick img{width:100%;height:100%;object-fit:cover;border-radius:16px}
 
     .s2-top{
-      display:flex;gap:14px;align-items:center;
+      display:flex;gap:14px;align-items:flex-start;
       padding:14px 14px 10px;border-bottom:1px solid var(--line);
     }
-    .s2-top-info{flex:1;min-width:0}
-    .s2-name-input{
+    .s2-top-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+    .s2-input{
       width:100%;height:42px;border-radius:12px;
       border:1px solid var(--line);background:#121213;
       color:var(--text);padding:0 12px;outline:none;font-size:15px;
     }
-
-    .s2-tracks{
-      flex:1;overflow:auto;padding:10px 14px;
+    .s2-desc{
+      width:100%;height:50px;border-radius:12px;
+      border:1px solid var(--line);background:#121213;
+      color:var(--text);padding:8px 12px;outline:none;
+      font-size:13px;font-family:inherit;resize:none;
+      color:var(--muted);
     }
+
+    .s2-tracks{flex:1;overflow:auto;padding:10px 14px}
 
     .s2-trk{
       display:flex;align-items:center;gap:10px;
       padding:10px;border-radius:12px;
       background:var(--card);border:1px solid var(--line);
-      margin-bottom:8px;cursor:pointer;
-      user-select:none;
+      margin-bottom:8px;cursor:pointer;user-select:none;
     }
     .s2-trk:active{opacity:.85}
     .s2-trk-cover{
@@ -223,24 +214,20 @@
     .s2-trk-title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .s2-trk-artist{font-size:12px;color:var(--muted);margin-top:1px}
 
-    /* add track button (plus icon) */
     .s2-add-btn{
       display:flex;align-items:center;gap:10px;
       padding:10px;border-radius:12px;
-      border:1px dashed var(--line);
-      margin-bottom:8px;cursor:pointer;
-      color:var(--muted);
+      margin-bottom:8px;cursor:pointer;color:var(--muted);
     }
     .s2-add-icon{
       width:42px;height:42px;border-radius:10px;
-      border:2px dashed #555;
       display:flex;align-items:center;justify-content:center;
       font-size:22px;flex:0 0 42px;
+      background-image:url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='10' ry='10' stroke='%23555555' stroke-width='2' stroke-dasharray='14%2c 8' stroke-linecap='round'/%3e%3c/svg%3e");
     }
 
     .s2-bottom{
-      flex:0 0 auto;
-      padding:10px 14px 14px;
+      flex:0 0 auto;padding:10px 14px 14px;
       border-top:1px solid var(--line);
       display:flex;flex-direction:column;gap:8px;
     }
@@ -253,7 +240,7 @@
     }
     .s2-actions{display:flex;gap:10px}
 
-    /* long press delete confirm */
+    /* long press confirm */
     .confirm-del{
       position:fixed;left:16px;right:16px;bottom:80px;
       background:#2a1a1a;border:1px solid #5a2a2a;
@@ -265,20 +252,26 @@
     .confirm-del-text{font-size:14px;color:var(--text);text-align:center}
     .confirm-del-btns{display:flex;gap:10px}
 
-    /* spinner */
-    .spin{
-      display:inline-block;width:18px;height:18px;
-      border:2px solid #444;border-top-color:var(--text);
-      border-radius:50%;animation:spin .7s linear infinite;
+    /* import choice modal */
+    .import-choice{
+      display:flex;flex-direction:column;gap:10px;
+      margin-bottom:14px;
     }
-    @keyframes spin{to{transform:rotate(360deg)}}
+    .import-opt{
+      height:52px;border-radius:14px;
+      background:var(--btn);border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:600;font-size:14px;
+      cursor:pointer;user-select:none;
+    }
+    .import-opt:active{opacity:.85}
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════
+<!-- ════════════════════════
      Screen 1: Плейлисты
-═══════════════════════════ -->
+════════════════════════ -->
 <div class="screen active" id="s1">
   <div class="header" id="header">
     <div class="title">ПЛЕЙЛИСТЫ</div>
@@ -287,9 +280,9 @@
   <div class="create" id="btnCreate">+ Создать плейлист</div>
 </div>
 
-<!-- ═══════════════════════════
-     Screen 2: Создать/Редактировать плейлист
-═══════════════════════════ -->
+<!-- ════════════════════════
+     Screen 2: Создать / Редактировать
+════════════════════════ -->
 <div class="screen" id="s2">
   <div class="header">
     <span class="back" id="s2Back">‹</span>
@@ -302,7 +295,8 @@
       <img id="s2CoverImg" style="display:none" />
     </div>
     <div class="s2-top-info">
-      <input type="text" class="s2-name-input" id="s2NameInput" placeholder="Название плейлиста" />
+      <input type="text" class="s2-input" id="s2NameInput" placeholder="Название плейлиста" />
+      <textarea class="s2-desc" id="s2DescInput" placeholder="Описание (необязательно)"></textarea>
       <div class="err" id="s2Err"></div>
     </div>
   </div>
@@ -310,9 +304,7 @@
   <div class="s2-tracks" id="s2TracksList"></div>
 
   <div class="s2-bottom">
-    <div class="s2-import-btn" id="s2ImportBtn">
-      Импорт треков из бота
-    </div>
+    <div class="s2-import-btn" id="s2ImportBtn">Импортировать треки</div>
     <div class="s2-actions">
       <button class="btn danger" id="s2Cancel">Отмена</button>
       <button class="btn primary" id="s2Save">Создать</button>
@@ -320,11 +312,10 @@
   </div>
 </div>
 
-<!-- file input (hidden) -->
 <input id="s2FileInput" type="file" accept="audio/*" style="display:none" multiple />
 <input id="s1CoverFile" type="file" accept="image/*" style="display:none" />
 
-<!-- long-press confirm delete -->
+<!-- long press confirm -->
 <div class="confirm-del" id="confirmDel">
   <div class="confirm-del-text" id="confirmDelText">Удалить трек?</div>
   <div class="confirm-del-btns">
@@ -333,15 +324,37 @@
   </div>
 </div>
 
-<!-- import pending modal -->
-<div class="modal-backdrop" id="importBack"></div>
-<div class="modal" id="importModal">
-  <div class="modal-title">Импорт треков из бота</div>
-  <div id="importList" style="max-height:40vh;overflow:auto;margin-bottom:14px"></div>
-  <div class="row-btns">
-    <button class="btn danger" id="importCancel">Закрыть</button>
-    <button class="btn primary" id="importApply">Добавить всё</button>
+<!-- import choice modal -->
+<div class="modal-backdrop" id="importChoiceBack"></div>
+<div class="modal" id="importChoiceModal">
+  <div class="modal-title">Импортировать треки</div>
+  <div class="import-choice">
+    <div class="import-opt" id="importFromBot">Из переписки с ботом</div>
+    <div class="import-opt" id="importFromGroup">Из группы / канала</div>
   </div>
+  <button class="btn" id="importChoiceCancel" style="width:100%">Отмена</button>
+</div>
+
+<!-- import from bot: pending list -->
+<div class="modal-backdrop" id="importBotBack"></div>
+<div class="modal" id="importBotModal">
+  <div class="modal-title">Треки из бота</div>
+  <div id="importBotList" style="max-height:40vh;overflow:auto;margin-bottom:14px"></div>
+  <div class="row-btns">
+    <button class="btn" id="importBotClose">Закрыть</button>
+    <button class="btn primary" id="importBotApply">Добавить все</button>
+  </div>
+</div>
+
+<!-- import from group: placeholder -->
+<div class="modal-backdrop" id="importGroupBack"></div>
+<div class="modal" id="importGroupModal">
+  <div class="modal-title">Импорт из группы</div>
+  <div class="empty">
+    Добавьте бота в нужную группу или канал.<br><br>
+    После этого бот просканирует все аудиофайлы и добавит их в плейлист.
+  </div>
+  <button class="btn" id="importGroupClose" style="width:100%;margin-top:14px">Понятно</button>
 </div>
 
 <script>
@@ -351,59 +364,46 @@
 
   const API_BASE = "https://music-player-server-jjkm.onrender.com";
 
-  let playlists  = {};
-  let openPl     = null;
+  let playlists = {};
+  let openPl = null;
 
-  // s2 state
-  let s2Mode      = "create"; // "create" | "edit"
-  let s2PlName    = null;     // original name (for edit)
-  let s2Tracks    = [];       // working copy of tracks
-  let s2Cover     = null;     // File object or null
-  let s2DelIndex  = null;
-  let longTimer   = null;
+  let s2Mode = "create";
+  let s2PlName = null;
+  let s2Tracks = [];
+  let s2Cover = null;
+  let s2DelIndex = null;
+  let longTimer = null;
 
-  function qs(id){ return document.getElementById(id); }
+  function qs(id){ return document.getElementById(id) }
   function fmt(sec){
     sec=Math.floor(sec||0);
     return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
   }
 
-  // ── API helpers ──
   async function apiGet(path){
     const sep=path.includes("?")?"&":"?";
     const r=await fetch(API_BASE+path+sep+"init_data="+encodeURIComponent(tg.initData));
-    const j=await r.json();
-    if(!r.ok) throw new Error(j.error||"api");
-    return j;
+    return await r.json();
   }
   async function apiPost(path,body){
     const r=await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(body||{})
+      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})
     });
-    const j=await r.json();
-    if(!r.ok) throw new Error(j.error||"api");
-    return j;
+    return await r.json();
   }
   async function apiDelete(path,body){
     const r=await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
-      method:"DELETE",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(body||{})
+      method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})
     });
-    const j=await r.json();
-    if(!r.ok) throw new Error(j.error||"api");
-    return j;
+    return await r.json();
   }
   async function apiUpload(path,formData){
     const r=await fetch(API_BASE+path+"?init_data="+encodeURIComponent(tg.initData),{
       method:"POST",body:formData
     });
-    const j=await r.json();
-    if(!r.ok) throw new Error(j.error||"upload");
-    return j;
+    return await r.json();
   }
 
-  // ── screens ──
   function showScreen(id){
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.getElementById(id).classList.add("active");
@@ -531,51 +531,54 @@
   // ══════════════════════════════
   //  Screen 2 — Create / Edit
   // ══════════════════════════════
-
   function openCreateScreen(){
-    s2Mode    = "create";
-    s2PlName  = null;
-    s2Tracks  = [];
-    s2Cover   = null;
-    qs("s2Title").textContent    = "Новый плейлист";
-    qs("s2Save").textContent     = "Создать";
-    qs("s2NameInput").value      = "";
-    qs("s2Err").textContent      = "";
-    qs("s2CoverImg").style.display = "none";
-    qs("s2CoverPlus").style.display = "block";
-    qs("s2CoverImg").src         = "";
+    s2Mode="create";
+    s2PlName=null;
+    s2Tracks=[];
+    s2Cover=null;
+    qs("s2Title").textContent="Новый плейлист";
+    qs("s2Save").textContent="Создать";
+    qs("s2NameInput").value="";
+    qs("s2DescInput").value="";
+    qs("s2Err").textContent="";
+    qs("s2CoverImg").style.display="none";
+    qs("s2CoverPlus").style.display="block";
+    qs("s2CoverImg").src="";
+    qs("s2CoverPick").classList.remove("has-img");
     renderS2Tracks();
     showScreen("s2");
   }
 
   function openEditScreen(name){
-    s2Mode   = "edit";
-    s2PlName = name;
-    const pl = playlists[name];
-    s2Tracks = (pl.tracks||[]).map(t=>({...t}));
-    s2Cover  = null;
-    qs("s2Title").textContent = "Редактировать";
-    qs("s2Save").textContent  = "Сохранить";
-    qs("s2NameInput").value   = name;
-    qs("s2Err").textContent   = "";
+    s2Mode="edit";
+    s2PlName=name;
+    const pl=playlists[name];
+    s2Tracks=(pl.tracks||[]).map(t=>({...t}));
+    s2Cover=null;
+    qs("s2Title").textContent="Редактирование";
+    qs("s2Save").textContent="Сохранить";
+    qs("s2NameInput").value=name;
+    qs("s2DescInput").value="";
+    qs("s2Err").textContent="";
 
     if(pl.cover_url){
-      qs("s2CoverImg").src = pl.cover_url;
-      qs("s2CoverImg").style.display = "block";
-      qs("s2CoverPlus").style.display = "none";
+      qs("s2CoverImg").src=pl.cover_url;
+      qs("s2CoverImg").style.display="block";
+      qs("s2CoverPlus").style.display="none";
+      qs("s2CoverPick").classList.add("has-img");
     } else {
-      qs("s2CoverImg").style.display = "none";
-      qs("s2CoverPlus").style.display = "block";
+      qs("s2CoverImg").style.display="none";
+      qs("s2CoverPlus").style.display="block";
+      qs("s2CoverPick").classList.remove("has-img");
     }
     renderS2Tracks();
     showScreen("s2");
   }
 
   function renderS2Tracks(){
-    const box = qs("s2TracksList");
-    box.innerHTML = "";
+    const box=qs("s2TracksList");
+    box.innerHTML="";
 
-    // existing tracks
     s2Tracks.forEach((t,i)=>{
       const div=document.createElement("div");
       div.className="s2-trk";
@@ -593,7 +596,6 @@
       div.appendChild(cvr);
       div.appendChild(info);
 
-      // long press → delete confirm
       div.addEventListener("pointerdown",()=>{
         longTimer=setTimeout(()=>showDelConfirm(i,t.title),600);
       });
@@ -603,7 +605,6 @@
       box.appendChild(div);
     });
 
-    // + add track button
     const addBtn=document.createElement("div");
     addBtn.className="s2-add-btn";
     addBtn.innerHTML=`
@@ -614,7 +615,8 @@
     box.appendChild(addBtn);
   }
 
-  function showDelConfirm(index, title){
+  // ── delete confirm ──
+  function showDelConfirm(index,title){
     s2DelIndex=index;
     qs("confirmDelText").textContent=`Удалить «${title||"трек"}»?`;
     qs("confirmDel").classList.add("show");
@@ -623,7 +625,6 @@
     qs("confirmDel").classList.remove("show");
     s2DelIndex=null;
   }
-
   qs("confirmDelNo").addEventListener("click",hideDelConfirm);
   qs("confirmDelYes").addEventListener("click",()=>{
     if(s2DelIndex!==null){
@@ -633,7 +634,7 @@
     hideDelConfirm();
   });
 
-  // cover pick
+  // ── cover pick ──
   qs("s2CoverPick").addEventListener("click",()=>qs("s1CoverFile").click());
   qs("s1CoverFile").addEventListener("change",(e)=>{
     const f=e.target.files&&e.target.files[0];
@@ -642,24 +643,18 @@
     qs("s2CoverImg").src=URL.createObjectURL(f);
     qs("s2CoverImg").style.display="block";
     qs("s2CoverPlus").style.display="none";
+    qs("s2CoverPick").classList.add("has-img");
   });
 
-  // add track from file
+  // ── add track from file ──
   qs("s2FileInput").addEventListener("change",async(e)=>{
     const files=Array.from(e.target.files||[]);
     if(!files.length) return;
-
     for(const f of files){
       const fd=new FormData();
       fd.append("file",f);
-      try{
-        await apiUpload("/api/upload/audio",fd);
-      }catch(err){
-        console.warn("upload error",err);
-      }
+      try{ await apiUpload("/api/upload/audio",fd); }catch(err){}
     }
-
-    // подтягиваем pending
     await loadPendingIntoS2();
     e.target.value="";
   });
@@ -669,7 +664,6 @@
       const res=await apiGet("/api/pending");
       const tracks=res.tracks||[];
       tracks.forEach(t=>{
-        // не дублируем
         if(!s2Tracks.find(x=>x.file_id===t.file_id)){
           s2Tracks.push(t);
         }
@@ -678,15 +672,35 @@
     }catch(e){}
   }
 
-  // import from bot (pending)
-  qs("s2ImportBtn").addEventListener("click",async()=>{
+  // ── import choice modal ──
+  function showModal(backId,modalId){
+    qs(backId).classList.add("show");
+    qs(modalId).classList.add("show");
+  }
+  function hideModal(backId,modalId){
+    qs(backId).classList.remove("show");
+    qs(modalId).classList.remove("show");
+  }
+
+  qs("s2ImportBtn").addEventListener("click",()=>{
+    showModal("importChoiceBack","importChoiceModal");
+  });
+  qs("importChoiceCancel").addEventListener("click",()=>{
+    hideModal("importChoiceBack","importChoiceModal");
+  });
+  qs("importChoiceBack").addEventListener("click",()=>{
+    hideModal("importChoiceBack","importChoiceModal");
+  });
+
+  // ── import from bot ──
+  qs("importFromBot").addEventListener("click",async()=>{
+    hideModal("importChoiceBack","importChoiceModal");
     try{
       const res=await apiGet("/api/pending");
       const tracks=res.tracks||[];
-      const box=qs("importList");
-
+      const box=qs("importBotList");
       if(!tracks.length){
-        box.innerHTML=`<div class="empty">Нет треков.<br>Отправь аудио боту, затем нажми /ready</div>`;
+        box.innerHTML=`<div class="empty">Нет треков.<br><br>Отправьте аудио боту, затем вернитесь сюда.</div>`;
       } else {
         box.innerHTML="";
         tracks.forEach(t=>{
@@ -696,71 +710,63 @@
           box.appendChild(div);
         });
       }
-
-      qs("importBack").classList.add("show");
-      qs("importModal").classList.add("show");
+      showModal("importBotBack","importBotModal");
     }catch(e){}
   });
 
-  qs("importCancel").addEventListener("click",()=>{
-    qs("importBack").classList.remove("show");
-    qs("importModal").classList.remove("show");
+  qs("importBotClose").addEventListener("click",()=>{
+    hideModal("importBotBack","importBotModal");
   });
-  qs("importBack").addEventListener("click",()=>{
-    qs("importBack").classList.remove("show");
-    qs("importModal").classList.remove("show");
+  qs("importBotBack").addEventListener("click",()=>{
+    hideModal("importBotBack","importBotModal");
   });
-
-  qs("importApply").addEventListener("click",async()=>{
+  qs("importBotApply").addEventListener("click",async()=>{
     await loadPendingIntoS2();
-    qs("importBack").classList.remove("show");
-    qs("importModal").classList.remove("show");
+    // очищаем pending на сервере (подготовка, окончательная очистка при сохранении)
+    hideModal("importBotBack","importBotModal");
   });
 
-  // back
-  qs("s2Back").addEventListener("click",()=>{
-    showScreen("s1");
-    load();
+  // ── import from group ──
+  qs("importFromGroup").addEventListener("click",()=>{
+    hideModal("importChoiceBack","importChoiceModal");
+    showModal("importGroupBack","importGroupModal");
   });
-  qs("s2Cancel").addEventListener("click",()=>{
-    showScreen("s1");
-    load();
+  qs("importGroupClose").addEventListener("click",()=>{
+    hideModal("importGroupBack","importGroupModal");
+  });
+  qs("importGroupBack").addEventListener("click",()=>{
+    hideModal("importGroupBack","importGroupModal");
   });
 
-  // save / create
+  // ── back / cancel ──
+  qs("s2Back").addEventListener("click",()=>{ showScreen("s1"); load(); });
+  qs("s2Cancel").addEventListener("click",()=>{ showScreen("s1"); load(); });
+
+  // ── save / create ──
   qs("s2Save").addEventListener("click",async()=>{
     const newName=qs("s2NameInput").value.trim();
-    if(!newName){
-      qs("s2Err").textContent="Название обязательно";
-      return;
-    }
+    if(!newName){ qs("s2Err").textContent="Название обязательно"; return; }
 
     try{
       if(s2Mode==="create"){
-        // создаём плейлист
         await apiPost("/api/playlist",{name:newName});
-      } else {
-        // переименовываем если имя изменилось
-        if(newName!==s2PlName){
-          await apiPost(`/api/playlist/${encodeURIComponent(s2PlName)}/rename`,{new_name:newName});
-          s2PlName=newName;
-        }
+      } else if(newName!==s2PlName){
+        await apiPost(`/api/playlist/${encodeURIComponent(s2PlName)}/rename`,{new_name:newName});
       }
 
-      // применяем pending треки (если есть)
+      // apply pending
       const pending=await apiGet("/api/pending");
       if((pending.tracks||[]).length){
         await apiPost("/api/pending/apply",{playlist:newName});
       }
 
-      // добавляем все s2Tracks которых ещё нет в плейлисте
-      const currentPl=await apiGet("/api/playlists");
-      const existing=(currentPl[newName]&&currentPl[newName].tracks)||[];
+      // add tracks that are not yet in playlist
+      const current=await apiGet("/api/playlists");
+      const existing=(current[newName]&&current[newName].tracks)||[];
       const existingIds=new Set(existing.map(t=>t.file_id));
 
       for(const t of s2Tracks){
         if(!existingIds.has(t.file_id)){
-          // добавляем трек напрямую через API
           await apiPost(`/api/playlist/${encodeURIComponent(newName)}/add_track`,{track:t});
         }
       }
